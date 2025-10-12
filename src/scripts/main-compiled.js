@@ -127,30 +127,46 @@ class NavigationPage {
     let newCurrentTab;
     let self = this;
     let scrollTop = $(window).scrollTop();
+    let windowHeight = $(window).height();
+    let documentHeight = $(document).height();
     
-    // Check each navigation tab to see which section is currently in view
-    $(".nav-tab").each(function () {
-      let id = $(this).attr("href");
-      let $section = $(id);
-      
-      if ($section.length > 0) {
-        let sectionTop = $section.offset().top - self.tabContainerHeight - 50; // Smaller buffer
-        let sectionBottom = sectionTop + $section.outerHeight();
-        
-        // Check if the current scroll position is within this section
-        if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
-          newCurrentId = id;
-          newCurrentTab = $(this);
-        }
-      }
-    });
-    
-    // If no section is found, default to home section when at top
-    if (!newCurrentId && scrollTop < 300) {
-      $(".nav-tab[href='#home']").each(function () {
-        newCurrentId = "#home";
+    // Check if user is near the bottom of the page (within 100px)
+    if (scrollTop + windowHeight >= documentHeight - 100) {
+      // User is at bottom, activate contact tab
+      $(".nav-tab[href='#contact']").each(function () {
+        newCurrentId = "#contact";
         newCurrentTab = $(this);
       });
+    } else {
+      // Check each navigation tab to see which section is currently in view
+      $(".nav-tab").each(function () {
+        let id = $(this).attr("href");
+        let $section = $(id);
+        
+        // Skip contact tab in this loop since we handle it separately
+        if (id === "#contact") {
+          return;
+        }
+        
+        if ($section.length > 0) {
+          let sectionTop = $section.offset().top - self.tabContainerHeight - 50; // Smaller buffer
+          let sectionBottom = sectionTop + $section.outerHeight();
+          
+          // Check if the current scroll position is within this section
+          if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
+            newCurrentId = id;
+            newCurrentTab = $(this);
+          }
+        }
+      });
+      
+      // If no section is found, default to home section when at top
+      if (!newCurrentId && scrollTop < 300) {
+        $(".nav-tab[href='#home']").each(function () {
+          newCurrentId = "#home";
+          newCurrentTab = $(this);
+        });
+      }
     }
     
     // Update active states
