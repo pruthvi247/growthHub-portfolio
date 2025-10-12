@@ -293,3 +293,170 @@ class ServicesCarousel {
 $(document).ready(function() {
   new ServicesCarousel();
 });
+
+// Blog System Functionality
+class BlogSystem {
+  constructor() {
+    this.blogGrid = $('#blogGrid');
+    this.filterBtns = $('.filter-btn');
+    this.searchInput = $('#blogSearch');
+    this.loadMoreBtn = $('#loadMoreBtn');
+    this.allArticles = $('.blog-card');
+    this.articlesPerPage = 6;
+    this.currentlyShown = 6;
+    this.currentFilter = 'all';
+    this.searchTerm = '';
+    
+    this.init();
+  }
+  
+  init() {
+    // Filter functionality
+    this.filterBtns.on('click', (e) => {
+      const category = $(e.target).data('category');
+      this.filterArticles(category);
+      this.updateActiveFilter($(e.target));
+    });
+    
+    // Search functionality
+    this.searchInput.on('input', (e) => {
+      this.searchTerm = e.target.value.toLowerCase();
+      this.filterArticles(this.currentFilter);
+    });
+    
+    // Load more functionality
+    this.loadMoreBtn.on('click', () => this.loadMoreArticles());
+    
+    // Service feature links
+    $('.service-features a').on('click', (e) => {
+      e.preventDefault();
+      const blogTopic = $(e.target).data('blog-topic');
+      this.navigateToTopic(blogTopic);
+    });
+    
+    this.updateStats();
+  }
+  
+  filterArticles(category) {
+    this.currentFilter = category;
+    this.currentlyShown = this.articlesPerPage;
+    
+    let visibleArticles = this.allArticles.filter((index, article) => {
+      const $article = $(article);
+      const articleCategory = $article.data('category');
+      const articleTopic = $article.data('topic');
+      const articleText = $article.text().toLowerCase();
+      
+      // Category filter
+      const categoryMatch = category === 'all' || articleCategory === category;
+      
+      // Search filter
+      const searchMatch = this.searchTerm === '' || articleText.includes(this.searchTerm);
+      
+      return categoryMatch && searchMatch;
+    });
+    
+    // Hide all articles first
+    this.allArticles.hide();
+    
+    // Show filtered articles up to current limit
+    visibleArticles.slice(0, this.currentlyShown).show();
+    
+    // Update load more button
+    this.updateLoadMoreButton(visibleArticles.length);
+    this.updateStats(visibleArticles.length);
+  }
+  
+  updateActiveFilter($activeBtn) {
+    this.filterBtns.removeClass('active');
+    $activeBtn.addClass('active');
+  }
+  
+  loadMoreArticles() {
+    this.currentlyShown += this.articlesPerPage;
+    this.filterArticles(this.currentFilter);
+  }
+  
+  updateLoadMoreButton(totalVisible) {
+    if (this.currentlyShown >= totalVisible) {
+      this.loadMoreBtn.hide();
+    } else {
+      this.loadMoreBtn.show();
+    }
+  }
+  
+  updateStats(totalVisible = null) {
+    if (totalVisible === null) {
+      totalVisible = this.allArticles.length;
+    }
+    
+    const shown = Math.min(this.currentlyShown, totalVisible);
+    $('#articlesCount').text(shown);
+    $('#totalArticles').text(totalVisible);
+  }
+  
+  navigateToTopic(topic) {
+    // Navigate to blog section
+    const blogSection = $('#tab-vite');
+    const scrollTop = blogSection.offset().top - 70;
+    
+    $('html, body').animate({ scrollTop: scrollTop }, 600, () => {
+      // After navigation, highlight the related article
+      this.highlightTopicArticle(topic);
+    });
+    
+    // Update navigation active state
+    $('.nav-tab').removeClass('active');
+    $('.nav-tab[href="#tab-vite"]').addClass('active');
+  }
+  
+  highlightTopicArticle(topic) {
+    // Remove existing highlights
+    $('.blog-card').removeClass('highlighted');
+    
+    // Find and highlight the matching article
+    const targetArticle = $(`.blog-card[data-topic="${topic}"]`);
+    if (targetArticle.length > 0) {
+      targetArticle.addClass('highlighted');
+      
+      // Scroll to the specific article
+      setTimeout(() => {
+        const articleOffset = targetArticle.offset().top - 150;
+        $('html, body').animate({ scrollTop: articleOffset }, 400);
+      }, 100);
+      
+      // Remove highlight after 3 seconds
+      setTimeout(() => {
+        targetArticle.removeClass('highlighted');
+      }, 3000);
+    }
+  }
+}
+
+// Article Reading Functionality
+$(document).ready(function() {
+  // Initialize blog system
+  new BlogSystem();
+  
+  // Article click handlers
+  $('.blog-card, .featured-article').on('click', function() {
+    const topic = $(this).data('topic');
+    openArticleModal(topic);
+  });
+  
+  $('.read-article-btn').on('click', function(e) {
+    e.stopPropagation();
+    const topic = $(this).closest('.featured-article').data('topic');
+    openArticleModal(topic);
+  });
+});
+
+// Article Modal System (for future implementation)
+function openArticleModal(topic) {
+  // This would open a modal or navigate to a detailed article view
+  console.log(`Opening article for topic: ${topic}`);
+  
+  // For now, we'll just show an alert
+  // In a real implementation, this would open a detailed view
+  alert(`Opening detailed article about: ${topic.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}`);
+}
