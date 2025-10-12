@@ -68,9 +68,18 @@ class NavigationPage {
   }
 
   onTabClick(event, element) {
+    let href = element.attr("href");
+    
+    // Check if this is a cross-page navigation (contains .html)
+    if (href.includes('.html')) {
+      // Allow normal navigation for cross-page links
+      return true;
+    }
+    
+    // Handle same-page navigation
     event.preventDefault();
     
-    let targetId = element.attr("href");
+    let targetId = href;
     let $targetSection = $(targetId);
     
     if ($targetSection.length > 0) {
@@ -397,7 +406,7 @@ class BlogSystem {
   
   navigateToTopic(topic) {
     // Navigate to blog section
-    const blogSection = $('#tab-vite');
+    const blogSection = $('#blog');
     const scrollTop = blogSection.offset().top - 70;
     
     $('html, body').animate({ scrollTop: scrollTop }, 600, () => {
@@ -407,7 +416,7 @@ class BlogSystem {
     
     // Update navigation active state
     $('.nav-tab').removeClass('active');
-    $('.nav-tab[href="#tab-vite"]').addClass('active');
+    $('.nav-tab[href="#blog"]').addClass('active');
   }
   
   highlightTopicArticle(topic) {
@@ -433,21 +442,103 @@ class BlogSystem {
   }
 }
 
-// Article Reading Functionality (for blogs page)
-$(document).ready(function() {
-  // Article click handlers (only on blogs page)
+// Featured Article Data (shared across pages)
+const FEATURED_ARTICLE_DATA = {
+  topic: 'strategic-planning',
+  title: 'The Future of Ethical Political Campaigns in India',
+  description: 'Exploring how modern digital strategies can transform political communication while maintaining ethical standards and authentic community connections.',
+  category: 'Strategy',
+  readTime: '8 min read',
+  publishDate: 'Dec 10, 2025'
+};
+
+// Function to update featured article across all pages
+function updateFeaturedArticle(newData) {
+  Object.assign(FEATURED_ARTICLE_DATA, newData);
+  
+  // Regenerate featured articles on current page
+  if ($('#home-featured-article').length > 0) {
+    $('#home-featured-article').html(createFeaturedArticle());
+  }
+  if ($('#blogs-featured-article').length > 0) {
+    $('#blogs-featured-article').html(createFeaturedArticle());
+  }
+  
+  // Rebind event handlers
+  initializeFeaturedArticle();
+}
+
+// Featured Article Component
+function createFeaturedArticle(data = FEATURED_ARTICLE_DATA) {
+  return `
+    <div class="featured-article" data-topic="${data.topic}">
+      <div class="featured-content">
+        <span class="featured-badge">Featured Article</span>
+        <h3>${data.title}</h3>
+        <p>${data.description}</p>
+        <div class="article-meta">
+          <span class="category">${data.category}</span>
+          <span class="read-time">${data.readTime}</span>
+          <span class="publish-date">${data.publishDate}</span>
+        </div>
+        <button class="read-article-btn">Read Full Article</button>
+      </div>
+      <div class="featured-image">
+        <div class="placeholder-image">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+            <path d="M2 17L12 22L22 17"/>
+            <path d="M2 12L12 17L22 12"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Initialize Featured Article Functionality
+function initializeFeaturedArticle() {
+  // Bind event handlers for featured articles on any page
+  $(document).off('click', '.featured-article').on('click', '.featured-article', function() {
+    const topic = $(this).data('topic');
+    openArticleModal(topic);
+  });
+  
+  $(document).off('click', '.read-article-btn').on('click', '.read-article-btn', function(e) {
+    e.stopPropagation();
+    const topic = $(this).closest('.featured-article').data('topic');
+    openArticleModal(topic);
+  });
+  
+  // Blog card handlers (only for blogs page)
   if (window.location.pathname.includes('blogs.html') || $('#blogGrid').length > 0) {
-    $('.blog-card, .featured-article').on('click', function() {
+    $(document).off('click', '.blog-card').on('click', '.blog-card', function() {
       const topic = $(this).data('topic');
       openArticleModal(topic);
     });
-    
-    $('.read-article-btn').on('click', function(e) {
-      e.stopPropagation();
-      const topic = $(this).closest('.featured-article').data('topic');
-      openArticleModal(topic);
-    });
   }
+}
+
+// Initialize Featured Articles on Page Load
+function initializePage() {
+  // Generate featured article for home page
+  if ($('#home-featured-article').length > 0) {
+    $('#home-featured-article').html(createFeaturedArticle());
+  }
+  
+  // Generate featured article for blogs page
+  if ($('#blogs-featured-article').length > 0) {
+    $('#blogs-featured-article').html(createFeaturedArticle());
+  }
+  
+  // Initialize featured article functionality on all pages
+  initializeFeaturedArticle();
+}
+
+// Article Reading Functionality
+$(document).ready(function() {
+  // Initialize the page content and functionality
+  initializePage();
 });
 
 // Full-Page Article Overlay System
