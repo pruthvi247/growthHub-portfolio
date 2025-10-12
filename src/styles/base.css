@@ -1,0 +1,39 @@
+/* Base styles and reset - Mobile First */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px; /* Base font size */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "ROBOTO", sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Background canvas */
+.background {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure content is accessible on mobile */
+.main {
+  position: relative;
+  z-index: 1;
+}

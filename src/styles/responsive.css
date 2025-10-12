@@ -1,0 +1,103 @@
+/* Mobile First Responsive Design */
+
+/* Mobile base styles already defined in base.css and other modules */
+
+/* Tablet adjustments */
+@media (min-width: 768px) {
+  .nav-container {
+    height: 70px; /* Slightly taller on tablets */
+  }
+  
+  .nav-tab {
+    min-height: 70px;
+    padding: 0.75rem 1rem;
+    letter-spacing: 0.08rem;
+  }
+  
+  .slider h1 {
+    font-size: clamp(3rem, 10vw, 5rem);
+  }
+  
+  .slider h3 {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1024px) {
+  .nav-container {
+    height: 75px; /* Original desktop height */
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.5);
+  }
+  
+  .nav-tab {
+    min-height: 75px;
+    padding: 1rem 1.5rem;
+    letter-spacing: 0.1rem;
+  }
+  
+  .slider h1 {
+    font-size: clamp(4rem, 12vw, 6rem);
+  }
+  
+  .slider h3 {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+  }
+  
+  /* Enhanced hover effects for desktop */
+  .nav-tab:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(3, 218, 198, 0.4);
+  }
+}
+
+/* Large desktop optimizations */
+@media (min-width: 1440px) {
+  .slider h1 {
+    font-size: clamp(5rem, 8vw, 7rem);
+  }
+  
+  .slider h3 {
+    font-size: clamp(2rem, 3vw, 3rem);
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  .nav-tab-slider {
+    height: 4px; /* Thicker on high DPI */
+  }
+}
+
+/* Landscape mobile adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .nav-container {
+    height: 50px;
+  }
+  
+  .nav-tab {
+    min-height: 50px;
+    font-size: clamp(0.6rem, 2.5vw, 1rem);
+  }
+  
+  .slider {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Accessibility - Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  /* Already using dark theme, but could add variations */
+  .nav-container {
+    background: #1a1b22;
+  }
+}

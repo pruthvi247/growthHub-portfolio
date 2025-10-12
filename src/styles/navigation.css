@@ -1,0 +1,69 @@
+/* Mobile First Navigation */
+.nav-container {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 60px; /* Smaller height for mobile */
+  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+  background: #1e1f26;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  border-top: 1px solid rgba(3, 218, 198, 0.2);
+}
+
+.nav-container--top-first {
+  position: fixed;
+  top: 75px;
+  bottom: auto;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.nav-container--top-second {
+  position: fixed;
+  top: 0;
+  bottom: auto;
+}
+
+.nav-tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  color: #03dac6;
+  letter-spacing: 0.05rem;
+  transition: all 0.3s ease;
+  font-size: clamp(0.7rem, 3vw, 1.2rem); /* Mobile first responsive font */
+  padding: 0.5rem 0.25rem;
+  min-height: 60px;
+  text-align: center;
+  font-weight: 500;
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-tab:hover,
+.nav-tab:focus {
+  color: #1e1f26;
+  background: linear-gradient(45deg, #03dac6, #ff0266);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(3, 218, 198, 0.3);
+}
+
+.nav-tab:active {
+  transform: translateY(0);
+}
+
+.nav-tab-slider {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 3px; /* Slightly thicker for mobile visibility */
+  background: linear-gradient(90deg, #03dac6, #ff0266);
+  transition: all 0.3s ease;
+  border-radius: 3px 3px 0 0;
+}

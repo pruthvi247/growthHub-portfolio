@@ -1,0 +1,47 @@
+{
+  "name": "growthhub-portfolio",
+  "version": "1.0.0",
+  "description": "A modern frontend portfolio showcasing latest web development trends and technologies",
+  "main": "src/scripts/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "live-server --port=3001 --open=/index.html",
+    "dev": "live-server --port=3001 --open=/index.html --watch=src",
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "echo 'CSS build placeholder - add build tools as needed'",
+    "build:js": "echo 'JS build placeholder - add build tools as needed'",
+    "test": "echo 'Tests placeholder - add testing framework'",
+    "lint": "echo 'Linting placeholder - add ESLint'",
+    "format": "echo 'Formatting placeholder - add Prettier'"
+  },
+  "keywords": [
+    "frontend",
+    "portfolio",
+    "web-development",
+    "pwa",
+    "jamstack",
+    "typescript",
+    "iot",
+    "ai-tools"
+  ],
+  "author": "GrowthHub Team",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "particles.js": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/growthhub/portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/growthhub/portfolio/issues"
+  },
+  "homepage": "https://growthhub.github.io/portfolio"
+}

@@ -1,0 +1,65 @@
+/* Mobile First Layout - Navigation and slider */
+.nav,
+.slider {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  background-color: #1e1f26;
+  text-align: center;
+  padding: 1rem 1rem 5rem; /* Added bottom padding for nav on mobile */
+}
+
+/* Mobile First Typography */
+.nav h1,
+.slider h1 {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: clamp(2rem, 8vw, 4rem); /* Responsive with min/max */
+  margin: 0;
+  padding-bottom: 1rem;
+  letter-spacing: 0.2rem; /* Reduced for mobile */
+  color: #03dac6;
+  transition: all 0.3s ease;
+  z-index: 3;
+  word-break: break-word; /* Handle long words on mobile */
+}
+
+.nav h1:hover,
+.slider h1:hover {
+  transform: translate3d(0, -5px, 22px); /* Reduced transform for mobile */
+  color: #ff0266;
+}
+
+.slider h2 {
+  font-size: clamp(1rem, 4vw, 1.8rem); /* Mobile first responsive size */
+  letter-spacing: 0.1rem;
+  font-family: "ROBOTO", sans-serif;
+  font-weight: 300;
+  color: #faebd7;
+  z-index: 4;
+  line-height: 1.4;
+  margin: 0 1rem; /* Side margins for readability */
+}
+
+h3.span {
+  font-size: clamp(0.9rem, 3.5vw, 1.5rem); /* Mobile first responsive size */
+  letter-spacing: 0.2em; /* Reduced for mobile readability */
+  font-family: "ROBOTO", sans-serif;
+  font-weight: 300;
+  color: #faebd7;
+  z-index: 4;
+  margin: 1rem 0;
+}
+
+.loader span {
+  display: inline-block;
+  transition: all 0.5s ease;
+}
+
+.loader span:hover {
+  color: #ff0266;
+  font-weight: 500;
+  transform: scale(1.1); /* Better mobile hover effect */
+}
