@@ -22,11 +22,46 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
 </head>
 <body>
-    <!-- Navigation Section -->
-    <section class="nav">
-        <h1>EMPOWERING HONEST POLITICS</h1>
-        <h3 class="span loader">
-            <span class="w">w</span>
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <!-- Logo Section -->
+            <div class="nav-logo">
+                <a href="#home" class="logo-link">
+                    <img src="./favicon.svg" alt="GrowthHub Logo" class="logo-icon">
+                    <span class="logo-text">GrowthHub</span>
+                </a>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a class="nav-tab" href="#home">Home</a>
+                <a class="nav-tab" href="#tab-svelte">Services</a>
+                <a class="nav-tab" href="#tab-esbuild">Mission</a>
+                <a class="nav-tab" href="#tab-next">AI Tools</a>
+                <a class="nav-tab" href="#tab-typescript">About</a>
+                <a class="nav-tab" href="#tab-vite">Blogs</a>
+                <span class="nav-tab-slider"></span>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section (formerly nav section) -->
+    <section class="hero" id="home">
+        <!-- Hero Particles Canvas -->
+        <canvas class="hero-particles"></canvas>
+        
+        <div class="hero-content">
+            <h1>EMPOWERING YOUR IDEAs</h1>
+            <h3 class="span loader">
+<span class="w">w</span>
 <span class="e">e</span>
 <span class="space">&nbsp;</span>
 <span class="h">h</span>
@@ -66,49 +101,37 @@
 <span class="o">o</span>
 <span class="n">n</span>
 <span class="e">e</span>
-        </h3>
-        
-        <!-- Navigation Container -->
-        <div class="nav-container">
-            <a class="nav-tab" href="#tab-svelte">Services</a>
-            <a class="nav-tab" href="#tab-esbuild">Mission</a>
-            <a class="nav-tab" href="#tab-next">AI Tools</a>
-            <a class="nav-tab" href="#tab-typescript">About</a>
-            <a class="nav-tab" href="#tab-vite">Blogs</a>
-            <span class="nav-tab-slider"></span>
+            </h3>
         </div>
     </section>
 
     <!-- Main Content Sections -->
     <main class="main">
-        <section id="tab-svelte" class="slider">
+        <section id="tab-svelte" class="content-section">
             <h1>Services</h1>
             <h2>No paid news- Only real impact</h2>
         </section>
         
-        <section id="tab-esbuild" class="slider">
+        <section id="tab-esbuild" class="content-section">
             <h1>Mission</h1>
             <h2>India needs genuine leaders, we help them reach every home, every community- "ethically"</h2>
         </section>
         
-        <section id="tab-next" class="slider">
+        <section id="tab-next" class="content-section">
             <h1>AI TOOLS</h1>
             <h2>Transforming Web Development in 2025</h2>
         </section>
         
-        <section id="tab-typescript" class="slider">
+        <section id="tab-typescript" class="content-section">
             <h1>About</h1>
             <h2>Founded by professionals passionate about clean politics, our media lab brings cutting-edge digital strategy to changemakers and aspiring leaders—across all walks of Indian life.”</h2>
         </section>
         
-        <section id="tab-vite" class="slider">
+        <section id="tab-vite" class="content-section">
             <h1>Blog</h1>
             <h2>Media for people</h2>
         </section>
     </main>
-
-    <!-- Background Canvas for Particles -->
-    <canvas class="background"></canvas>
 
     <!-- Main JavaScript -->
     <script src="./src/scripts/main-compiled.js"></script>
@@ -119,6 +142,5 @@
     Credits and Thanks:
     Matrix - Particles.js
     SliderJS - Ettrics
-    Design - Sara Mazal Web
     Fonts - Google Fonts
 -->

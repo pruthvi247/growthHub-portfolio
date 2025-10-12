@@ -1,13 +1,13 @@
-/* Mobile-First Loading Animation */
+/* Mobile-First Loading Animation - Very Slow */
 .loader span {
   color: #faebd7;
   text-shadow: 0 0 0 #faebd7;
-  animation: loading 1s ease-in-out infinite alternate;
+  animation: loading 8s ease-in-out infinite alternate;
   will-change: color, text-shadow; /* Optimize for GPU */
   backface-visibility: hidden; /* Improve performance */
 }
 
-/* Mobile-optimized keyframes */
+/* Mobile-optimized keyframes - Very subtle glow */
 @keyframes loading {
   0% {
     color: #faebd7;
@@ -15,11 +15,11 @@
   }
   100% {
     color: #ff0266;
-    text-shadow: 10px 0 35px #ff0266; /* Reduced shadow for mobile */
+    text-shadow: 0 0 15px rgba(255, 2, 102, 0.6); /* Very subtle glow for mobile */
   }
 }
 
-/* Enhanced effects for larger screens */
+/* Enhanced effects for larger screens - Still subtle */
 @media (min-width: 768px) {
   @keyframes loading {
     0% {
@@ -28,92 +28,92 @@
     }
     100% {
       color: #ff0266;
-      text-shadow: 20px 0 70px #ff0266; /* Full shadow on desktop */
+      text-shadow: 0 0 25px rgba(255, 2, 102, 0.7); /* Subtle glow on desktop */
     }
   }
 }
 
 .loader span:nth-child(2) { 
-  -webkit-animation-delay: 0.1s; 
-  animation-delay: 0.1s; 
-}
-.loader span:nth-child(3) { 
-  -webkit-animation-delay: 0.2s; 
-  animation-delay: 0.2s; 
-}
-.loader span:nth-child(4) { 
-  -webkit-animation-delay: 0.3s; 
-  animation-delay: 0.3s; 
-}
-.loader span:nth-child(5) { 
-  -webkit-animation-delay: 0.4s; 
-  animation-delay: 0.4s; 
-}
-.loader span:nth-child(6) { 
   -webkit-animation-delay: 0.5s; 
   animation-delay: 0.5s; 
 }
-.loader span:nth-child(7) { 
-  -webkit-animation-delay: 0.6s; 
-  animation-delay: 0.6s; 
-}
-.loader span:nth-child(8) { 
-  -webkit-animation-delay: 0.7s; 
-  animation-delay: 0.7s; 
-}
-.loader span:nth-child(9) { 
-  -webkit-animation-delay: 0.8s; 
-  animation-delay: 0.8s; 
-}
-.loader span:nth-child(10) { 
-  -webkit-animation-delay: 0.9s; 
-  animation-delay: 0.9s; 
-}
-.loader span:nth-child(11) { 
+.loader span:nth-child(3) { 
   -webkit-animation-delay: 1s; 
   animation-delay: 1s; 
 }
-.loader span:nth-child(12) { 
-  -webkit-animation-delay: 1.1s; 
-  animation-delay: 1.1s; 
-}
-.loader span:nth-child(13) { 
-  -webkit-animation-delay: 1.2s; 
-  animation-delay: 1.2s; 
-}
-.loader span:nth-child(14) { 
-  -webkit-animation-delay: 1.3s; 
-  animation-delay: 1.3s; 
-}
-.loader span:nth-child(15) { 
-  -webkit-animation-delay: 1.4s; 
-  animation-delay: 1.4s; 
-}
-.loader span:nth-child(16) { 
+.loader span:nth-child(4) { 
   -webkit-animation-delay: 1.5s; 
   animation-delay: 1.5s; 
 }
-.loader span:nth-child(17) { 
-  -webkit-animation-delay: 1.6s; 
-  animation-delay: 1.6s; 
-}
-.loader span:nth-child(18) { 
-  -webkit-animation-delay: 1.7s; 
-  animation-delay: 1.7s; 
-}
-.loader span:nth-child(19) { 
-  -webkit-animation-delay: 1.8s; 
-  animation-delay: 1.8s; 
-}
-.loader span:nth-child(20) { 
-  -webkit-animation-delay: 1.9s; 
-  animation-delay: 1.9s; 
-}
-.loader span:nth-child(21) { 
+.loader span:nth-child(5) { 
   -webkit-animation-delay: 2s; 
   animation-delay: 2s; 
 }
+.loader span:nth-child(6) { 
+  -webkit-animation-delay: 2.5s; 
+  animation-delay: 2.5s; 
+}
+.loader span:nth-child(7) { 
+  -webkit-animation-delay: 3s; 
+  animation-delay: 3s; 
+}
+.loader span:nth-child(8) { 
+  -webkit-animation-delay: 3.5s; 
+  animation-delay: 3.5s; 
+}
+.loader span:nth-child(9) { 
+  -webkit-animation-delay: 4s; 
+  animation-delay: 4s; 
+}
+.loader span:nth-child(10) { 
+  -webkit-animation-delay: 4.5s; 
+  animation-delay: 4.5s; 
+}
+.loader span:nth-child(11) { 
+  -webkit-animation-delay: 5s; 
+  animation-delay: 5s; 
+}
+.loader span:nth-child(12) { 
+  -webkit-animation-delay: 5.5s; 
+  animation-delay: 5.5s; 
+}
+.loader span:nth-child(13) { 
+  -webkit-animation-delay: 6s; 
+  animation-delay: 6s; 
+}
+.loader span:nth-child(14) { 
+  -webkit-animation-delay: 6.5s; 
+  animation-delay: 6.5s; 
+}
+.loader span:nth-child(15) { 
+  -webkit-animation-delay: 7s; 
+  animation-delay: 7s; 
+}
+.loader span:nth-child(16) { 
+  -webkit-animation-delay: 7.5s; 
+  animation-delay: 7.5s; 
+}
+.loader span:nth-child(17) { 
+  -webkit-animation-delay: 8s; 
+  animation-delay: 8s; 
+}
+.loader span:nth-child(18) { 
+  -webkit-animation-delay: 8.5s; 
+  animation-delay: 8.5s; 
+}
+.loader span:nth-child(19) { 
+  -webkit-animation-delay: 9s; 
+  animation-delay: 9s; 
+}
+.loader span:nth-child(20) { 
+  -webkit-animation-delay: 9.5s; 
+  animation-delay: 9.5s; 
+}
+.loader span:nth-child(21) { 
+  -webkit-animation-delay: 10s; 
+  animation-delay: 10s; 
+}
 .loader span:nth-child(22) { 
-  -webkit-animation-delay: 2.1s; 
-  animation-delay: 2.1s; 
+  -webkit-animation-delay: 10.5s; 
+  animation-delay: 10.5s; 
 }

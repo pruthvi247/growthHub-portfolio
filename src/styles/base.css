@@ -8,6 +8,7 @@
 html {
   font-size: 16px; /* Base font size */
   scroll-behavior: smooth;
+  scroll-padding-top: 70px; /* Offset for fixed navigation */
 }
 
 body {
@@ -15,22 +16,14 @@ body {
   line-height: 1.6;
   overflow-x: hidden; /* Prevent horizontal scroll */
   min-height: 100vh;
+  background-color: #1e1f26; /* Dark background for particles */
 }
 
 a {
   text-decoration: none;
 }
 
-/* Background canvas */
-.background {
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  pointer-events: none;
-}
+/* Removed - particles now confined to hero section only */
 
 /* Ensure content is accessible on mobile */
 .main {

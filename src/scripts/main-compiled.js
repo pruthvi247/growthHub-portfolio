@@ -6,25 +6,43 @@ Fonts - Google Fonts
 */
 
 window.onload = function () {
+  // Check if Particles library is loaded
+  if (typeof Particles === 'undefined') {
+    console.error('Particles.js library not found. Make sure the CDN link is working.');
+    return;
+  }
+  
+  // Check if hero particles element exists
+  const heroParticlesElement = document.querySelector('.hero-particles');
+  if (!heroParticlesElement) {
+    console.error('Hero particles canvas element not found.');
+    return;
+  }
+  
+  console.log('Initializing hero particles...');
+  
+  // Initialize particles confined to hero section only
   Particles.init({
-    selector: ".background"
-  });
-};
-const particles = Particles.init({
-  selector: ".background",
-  color: ["#03dac6", "#ff0266", "#000000"],
-  connectParticles: true,
-  responsive: [
-    {
-      breakpoint: 768,
-      options: {
-        color: ["#faebd7", "#03dac6", "#ff0266"],
-        maxParticles: 43,
-        connectParticles: false
+    selector: ".hero-particles",
+    color: ["#03dac6", "#ff0266", "#000000"],
+    connectParticles: true,
+    speed: 0.1, // Slower movement speed for desktop
+    maxParticles: 80, // More particles for hero section
+    responsive: [
+      {
+        breakpoint: 768,
+        options: {
+          color: ["#faebd7", "#03dac6", "#ff0266"],
+          maxParticles: 40,
+          connectParticles: false,
+          speed: 0.08 // Even slower on mobile for better performance
+        }
       }
-    }
-  ]
-});
+    ]
+  });
+  
+  console.log('Hero particles initialized successfully');
+};
 
 class NavigationPage {
   constructor() {
@@ -33,6 +51,8 @@ class NavigationPage {
     this.tabContainerHeight = 70;
     this.lastScroll = 0;
     let self = this;
+    
+    // Set up event listeners
     $(".nav-tab").click(function () {
       self.onTabClick(event, $(this));
     });
@@ -42,13 +62,32 @@ class NavigationPage {
     $(window).resize(() => {
       this.onResize();
     });
+    
+    // Initialize the slider position
+    this.findCurrentTabSelector();
   }
 
   onTabClick(event, element) {
     event.preventDefault();
-    let scrollTop =
-      $(element.attr("href")).offset().top - this.tabContainerHeight + 1;
-    $("html, body").animate({ scrollTop: scrollTop }, 600);
+    
+    let targetId = element.attr("href");
+    let $targetSection = $(targetId);
+    
+    if ($targetSection.length > 0) {
+      let scrollTop = $targetSection.offset().top - this.tabContainerHeight + 1;
+      
+      // Remove active class from all tabs and add to clicked tab
+      $(".nav-tab").removeClass("active");
+      element.addClass("active");
+      
+      // Update current tab reference
+      this.currentId = targetId;
+      this.currentTab = element;
+      this.setSliderCss();
+      
+      // Animate scroll
+      $("html, body").animate({ scrollTop: scrollTop }, 600);
+    }
   }
 
   onScroll() {
@@ -64,35 +103,13 @@ class NavigationPage {
   }
 
   checkHeaderPosition() {
-    const headerHeight = 75;
-    if ($(window).scrollTop() > headerHeight) {
-      $(".nav-container").addClass("nav-container--scrolled");
+    // Add scroll effect to top navigation
+    const scrollTop = $(window).scrollTop();
+    
+    if (scrollTop > 50) {
+      $(".top-nav").addClass("scrolled");
     } else {
-      $(".nav-container").removeClass("nav-container--scrolled");
-    }
-    let offset =
-      $(".nav").offset().top +
-      $(".nav").height() -
-      this.tabContainerHeight -
-      headerHeight;
-    if (
-      $(window).scrollTop() > this.lastScroll &&
-      $(window).scrollTop() > offset
-    ) {
-      $(".nav-container").addClass("nav-container--move-up");
-      $(".nav-container").removeClass("nav-container--top-first");
-      $(".nav-container").addClass("nav-container--top-second");
-    } else if (
-      $(window).scrollTop() < this.lastScroll &&
-      $(window).scrollTop() > offset
-    ) {
-      $(".nav-container").removeClass("nav-container--move-up");
-      $(".nav-container").removeClass("nav-container--top-second");
-      $(".nav-container").addClass("nav-container--top-first");
-    } else {
-      $(".nav-container").removeClass("nav-container--move-up");
-      $(".nav-container").removeClass("nav-container--top-first");
-      $(".nav-container").removeClass("nav-container--top-second");
+      $(".top-nav").removeClass("scrolled");
     }
   }
 
@@ -100,20 +117,43 @@ class NavigationPage {
     let newCurrentId;
     let newCurrentTab;
     let self = this;
+    let scrollTop = $(window).scrollTop();
+    
+    // Check each navigation tab to see which section is currently in view
     $(".nav-tab").each(function () {
       let id = $(this).attr("href");
-      let offsetTop = $(id).offset().top - self.tabContainerHeight;
-      let offsetBottom =
-        $(id).offset().top + $(id).height() - self.tabContainerHeight;
-      if (
-        $(window).scrollTop() > offsetTop &&
-        $(window).scrollTop() < offsetBottom
-      ) {
-        newCurrentId = id;
-        newCurrentTab = $(this);
+      let $section = $(id);
+      
+      if ($section.length > 0) {
+        let sectionTop = $section.offset().top - self.tabContainerHeight - 50; // Smaller buffer
+        let sectionBottom = sectionTop + $section.outerHeight();
+        
+        // Check if the current scroll position is within this section
+        if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
+          newCurrentId = id;
+          newCurrentTab = $(this);
+        }
       }
     });
-    if (this.currentId != newCurrentId || this.currentId === null) {
+    
+    // If no section is found, default to home section when at top
+    if (!newCurrentId && scrollTop < 300) {
+      $(".nav-tab[href='#home']").each(function () {
+        newCurrentId = "#home";
+        newCurrentTab = $(this);
+      });
+    }
+    
+    // Update active states
+    if (this.currentId != newCurrentId) {
+      // Remove active class from all tabs
+      $(".nav-tab").removeClass("active");
+      
+      // Add active class to current tab
+      if (newCurrentTab && newCurrentTab.length > 0) {
+        newCurrentTab.addClass("active");
+      }
+      
       this.currentId = newCurrentId;
       this.currentTab = newCurrentTab;
       this.setSliderCss();
@@ -123,13 +163,41 @@ class NavigationPage {
   setSliderCss() {
     let width = 0;
     let left = 0;
-    if (this.currentTab) {
-      width = this.currentTab.css("width");
-      left = this.currentTab.offset().left;
+    if (this.currentTab && this.currentTab.length > 0) {
+      width = this.currentTab.outerWidth();
+      left = this.currentTab.offset().left - this.currentTab.closest('.nav-links').offset().left;
     }
-    $(".nav-tab-slider").css("width", width);
-    $(".nav-tab-slider").css("left", left);
+    $(".nav-tab-slider").css({
+      "width": width + "px",
+      "left": left + "px",
+      "transition": "all 0.3s ease"
+    });
   }
 }
 
 new NavigationPage();
+
+// Mobile Navigation Toggle
+$(document).ready(function() {
+  const mobileToggle = $('.mobile-menu-toggle');
+  const navLinks = $('.nav-links');
+  
+  mobileToggle.on('click', function() {
+    navLinks.toggleClass('mobile-open');
+    $(this).toggleClass('active');
+  });
+  
+  // Close mobile menu when clicking on a nav link
+  $('.nav-tab').on('click', function() {
+    navLinks.removeClass('mobile-open');
+    mobileToggle.removeClass('active');
+  });
+  
+  // Close mobile menu when clicking outside
+  $(document).on('click', function(e) {
+    if (!$(e.target).closest('.top-nav').length) {
+      navLinks.removeClass('mobile-open');
+      mobileToggle.removeClass('active');
+    }
+  });
+});
