@@ -108,3 +108,321 @@ h3.span {
   font-weight: 500;
   transform: scale(1.1); /* Better mobile hover effect */
 }
+
+/* Services Carousel Container */
+.services-carousel-container {
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+  margin: 3rem auto 0;
+}
+
+/* Carousel Navigation Dots */
+.carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.nav-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(3, 218, 198, 0.3);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-dot.active,
+.nav-dot:hover {
+  background: #03dac6;
+  border-color: #03dac6;
+  transform: scale(1.2);
+}
+
+/* Carousel Wrapper */
+.services-carousel-wrapper {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.services-carousel {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Vertical Sections */
+.vertical-section {
+  min-width: 100%;
+  padding: 2rem;
+  background: rgba(30, 31, 38, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.vertical-section.active {
+  opacity: 1;
+}
+
+.vertical-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.vertical-header h3 {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 2rem;
+  color: #03dac6;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.vertical-header p {
+  color: #faebd7;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Services Card with Spotlight Effect */
+.services-card {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(135deg, #2a2b38 0%, #1e1f26 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid rgba(3, 218, 198, 0.2);
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.services-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(3, 218, 198, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Content */
+.card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 1rem;
+  color: #03dac6;
+  background: rgba(3, 218, 198, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.card-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.services-card:hover .card-icon {
+  background: rgba(3, 218, 198, 0.2);
+  transform: scale(1.1);
+}
+
+.card-header h3,
+.card-header h4 {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1.3rem;
+  color: #03dac6;
+  margin: 0;
+  font-weight: 600;
+}
+
+.card-body p {
+  color: #faebd7;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.service-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+}
+
+.service-features li {
+  color: #faebd7;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  position: relative;
+  padding-left: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.service-features li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #ff0266;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.service-features li:hover {
+  color: #03dac6;
+}
+
+.service-features li:hover::before {
+  transform: translateX(5px);
+}
+
+/* CTA Button */
+.cta-button {
+  background: linear-gradient(135deg, #03dac6 0%, #ff0266 100%);
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  color: #1e1f26;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(3, 218, 198, 0.3);
+}
+
+/* Individual card spotlight effects removed - keeping only main carousel spotlight */
+
+/* Carousel Controls */
+.carousel-controls {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.carousel-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(3, 218, 198, 0.1);
+  border: 2px solid rgba(3, 218, 198, 0.3);
+  color: #03dac6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  pointer-events: all;
+  backdrop-filter: blur(10px);
+}
+
+.carousel-btn:hover {
+  background: rgba(3, 218, 198, 0.2);
+  border-color: #03dac6;
+  transform: scale(1.1);
+}
+
+.carousel-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.prev-btn {
+  margin-left: -25px;
+}
+
+.next-btn {
+  margin-right: -25px;
+}
+
+/* Responsive Design for Carousel */
+@media (max-width: 768px) {
+  .services-carousel-container {
+    margin: 2rem 1rem 0;
+  }
+  
+  .vertical-section {
+    padding: 1rem;
+  }
+  
+  .vertical-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .services-card {
+    padding: 1.5rem;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .card-icon {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .card-header h3,
+  .card-header h4 {
+    font-size: 1.2rem;
+  }
+  
+  .card-body p {
+    text-align: center;
+    font-size: 0.9rem;
+  }
+  
+  .service-features {
+    text-align: left;
+  }
+  
+  .carousel-controls {
+    position: static;
+    transform: none;
+    margin-top: 2rem;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .prev-btn,
+  .next-btn {
+    margin: 0;
+    position: static;
+  }
+}

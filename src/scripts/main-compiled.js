@@ -201,3 +201,95 @@ $(document).ready(function() {
     }
   });
 });
+
+// Services Carousel Functionality
+class ServicesCarousel {
+  constructor() {
+    this.carousel = $('#servicesCarousel');
+    this.verticals = $('.vertical-section');
+    this.navDots = $('.nav-dot');
+    this.prevBtn = $('#prevBtn');
+    this.nextBtn = $('#nextBtn');
+    this.currentIndex = 0;
+    this.totalVerticals = this.verticals.length;
+    
+    this.init();
+  }
+  
+  init() {
+    // Set up event listeners
+    this.navDots.on('click', (e) => this.goToVertical($(e.target).data('vertical')));
+    this.prevBtn.on('click', () => this.goToPrevious());
+    this.nextBtn.on('click', () => this.goToNext());
+    
+    // Auto-advance carousel every 8 seconds
+    this.startAutoPlay();
+    
+    // Pause auto-play on hover
+    $('.services-carousel-container').hover(
+      () => this.stopAutoPlay(),
+      () => this.startAutoPlay()
+    );
+    
+    // Initialize first vertical
+    this.updateCarousel();
+  }
+  
+  goToVertical(index) {
+    if (index >= 0 && index < this.totalVerticals) {
+      this.currentIndex = index;
+      this.updateCarousel();
+    }
+  }
+  
+  goToNext() {
+    this.currentIndex = (this.currentIndex + 1) % this.totalVerticals;
+    this.updateCarousel();
+  }
+  
+  goToPrevious() {
+    this.currentIndex = (this.currentIndex - 1 + this.totalVerticals) % this.totalVerticals;
+    this.updateCarousel();
+  }
+  
+  updateCarousel() {
+    // Move carousel
+    const translateX = -this.currentIndex * 100;
+    this.carousel.css('transform', `translateX(${translateX}%)`);
+    
+    // Update active states
+    this.verticals.removeClass('active');
+    this.verticals.eq(this.currentIndex).addClass('active');
+    
+    this.navDots.removeClass('active');
+    this.navDots.eq(this.currentIndex).addClass('active');
+    
+    // Add entrance animations to cards
+    setTimeout(() => {
+      const activeCards = this.verticals.eq(this.currentIndex).find('.services-card');
+      activeCards.each((index, card) => {
+        setTimeout(() => {
+          $(card).addClass('animate-in');
+        }, index * 200);
+      });
+    }, 100);
+  }
+  
+  startAutoPlay() {
+    this.stopAutoPlay();
+    this.autoPlayInterval = setInterval(() => {
+      this.goToNext();
+    }, 8000);
+  }
+  
+  stopAutoPlay() {
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+    }
+  }
+}
+
+// Initialize Services Carousel
+$(document).ready(function() {
+  new ServicesCarousel();
+});
