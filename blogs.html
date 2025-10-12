@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GrowthHub Blog - Political Insights, Strategies, and Expertise">
+    <meta name="keywords" content="political campaigns, digital strategy, ethical politics, media, analytics">
+    <meta name="author" content="GrowthHub Team">
+    
+    <title>Blog | GrowthHub - Political Insights & Strategies</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="./src/styles/main.css">
+    
+    <!-- jQuery (required for original navigation code) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <!-- Logo Section -->
+            <div class="nav-logo">
+                <a href="index.html" class="logo-link">
+                    <img src="./favicon.svg" alt="GrowthHub Logo" class="logo-icon">
+                    <span class="logo-text">GrowthHub</span>
+                </a>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="nav-links">
+                <a class="nav-tab" href="index.html#home">Home</a>
+                <a class="nav-tab" href="index.html#tab-svelte">Services</a>
+                <a class="nav-tab" href="index.html#tab-esbuild">Mission</a>
+                <a class="nav-tab" href="index.html#tab-next">AI Tools</a>
+                <a class="nav-tab" href="index.html#tab-typescript">About</a>
+                <a class="nav-tab active" href="blogs.html">Blogs</a>
+                <span class="nav-tab-slider"></span>
+            </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Blog Page Header -->
+    <section class="blog-page-header">
+        <div class="container">
+            <h1>Blog</h1>
+            <h2>Media for people - Insights, strategies, and expertise</h2>
+            <p>Comprehensive articles on ethical political campaigns, digital strategy, and community engagement</p>
+        </div>
+    </section>
+
+    <!-- Main Blog Content -->
+    <main class="blog-main">
+        <div class="blog-container">
+            <!-- Blog Navigation -->
+            <div class="blog-header">
+                <div class="blog-filters">
+                    <button class="filter-btn active" data-category="all">All Topics</button>
+                    <button class="filter-btn" data-category="strategy">Strategy</button>
+                    <button class="filter-btn" data-category="media">Media</button>
+                    <button class="filter-btn" data-category="technology">Technology</button>
+                    <button class="filter-btn" data-category="outreach">Outreach</button>
+                </div>
+            </div>
+            
+            <!-- Blog Stats -->
+            <div class="blog-stats">
+                Showing <span id="articlesCount">6</span> of <span id="totalArticles">6</span> articles
+            </div>
+            
+            <!-- Featured Article -->
+            <div class="featured-article" data-topic="strategic-planning">
+                <div class="featured-content">
+                    <span class="featured-badge">Featured Article</span>
+                    <h3>The Future of Ethical Political Campaigns in India</h3>
+                    <p>Exploring how modern digital strategies can transform political communication while maintaining ethical standards and authentic community connections.</p>
+                    <div class="article-meta">
+                        <span class="category">Strategy</span>
+                        <span class="read-time">8 min read</span>
+                        <span class="publish-date">Dec 10, 2025</span>
+                    </div>
+                    <button class="read-article-btn">Read Full Article</button>
+                </div>
+                <div class="featured-image">
+                    <div class="placeholder-image">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                            <path d="M2 17L12 22L22 17"/>
+                            <path d="M2 12L12 17L22 12"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blog Articles Grid -->
+            <div class="blog-grid" id="blogGrid">
+                
+                <!-- Strategic Planning Articles -->
+                <article class="blog-card" data-topic="strategic-planning" data-category="strategy">
+                    <div class="card-image">
+                        <div class="category-tag">Strategy</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Strategic Planning for Modern Campaigns</h4>
+                        <p>Comprehensive guide to developing campaign strategies that resonate with diverse Indian communities.</p>
+                        <div class="article-meta">
+                            <span class="read-time">5 min read</span>
+                            <span class="publish-date">Dec 8, 2025</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Content Creation Articles -->
+                <article class="blog-card" data-topic="content-creation" data-category="media">
+                    <div class="card-image">
+                        <div class="category-tag">Media</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Content Creation for Political Impact</h4>
+                        <p>Best practices for creating authentic content that builds trust and drives meaningful engagement.</p>
+                        <div class="article-meta">
+                            <span class="read-time">7 min read</span>
+                            <span class="publish-date">Dec 6, 2025</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Performance Analytics Articles -->
+                <article class="blog-card" data-topic="performance-analytics" data-category="technology">
+                    <div class="card-image">
+                        <div class="category-tag">Technology</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 3v5h5M6 17a9 9 0 1 0 3-7.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Performance Analytics in Political Campaigns</h4>
+                        <p>Leveraging data analytics to measure campaign effectiveness and optimize voter outreach strategies.</p>
+                        <div class="article-meta">
+                            <span class="read-time">6 min read</span>
+                            <span class="publish-date">Dec 4, 2025</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Door-to-door Campaigns Articles -->
+                <article class="blog-card" data-topic="door-to-door-campaigns" data-category="outreach">
+                    <div class="card-image">
+                        <div class="category-tag">Outreach</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Effective Door-to-Door Campaign Strategies</h4>
+                        <p>Building genuine connections through grassroots campaigning and community engagement.</p>
+                        <div class="article-meta">
+                            <span class="read-time">4 min read</span>
+                            <span class="publish-date">Dec 2, 2025</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Video Production Articles -->
+                <article class="blog-card" data-topic="video-production" data-category="media">
+                    <div class="card-image">
+                        <div class="category-tag">Media</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect width="15" height="14" x="1" y="5" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Political Video Production Best Practices</h4>
+                        <p>Creating compelling video content that tells authentic stories and connects with voters emotionally.</p>
+                        <div class="article-meta">
+                            <span class="read-time">8 min read</span>
+                            <span class="publish-date">Nov 30, 2025</span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Crisis Management Articles -->
+                <article class="blog-card" data-topic="crisis-management" data-category="strategy">
+                    <div class="card-image">
+                        <div class="category-tag">Strategy</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Crisis Management in Political Communications</h4>
+                        <p>Strategic approaches to handling controversies and maintaining public trust during challenging times.</p>
+                        <div class="article-meta">
+                            <span class="read-time">9 min read</span>
+                            <span class="publish-date">Nov 28, 2025</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Social Media Content Articles -->
+                <article class="blog-card" data-topic="social-media-content" data-category="media">
+                    <div class="card-image">
+                        <div class="category-tag">Media</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Social Media Content That Connects</h4>
+                        <p>Creating authentic social media content that builds genuine relationships with constituents.</p>
+                        <div class="article-meta">
+                            <span class="read-time">6 min read</span>
+                            <span class="publish-date">Nov 26, 2025</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Voter Analysis Articles -->
+                <article class="blog-card" data-topic="voter-analysis" data-category="technology">
+                    <div class="card-image">
+                        <div class="category-tag">Technology</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Understanding Voter Behavior Through Data</h4>
+                        <p>Advanced voter analysis techniques to understand constituency needs and preferences.</p>
+                        <div class="article-meta">
+                            <span class="read-time">7 min read</span>
+                            <span class="publish-date">Nov 24, 2025</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Community Events Articles -->
+                <article class="blog-card" data-topic="community-events" data-category="outreach">
+                    <div class="card-image">
+                        <div class="category-tag">Outreach</div>
+                        <div class="placeholder-image small">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="m22 21-3-3m0 0a5.5 5.5 0 1 0-7.78-7.78 5.5 5.5 0 0 0 7.78 7.78Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h4>Organizing Impactful Community Events</h4>
+                        <p>Best practices for planning and executing community events that bring people together.</p>
+                        <div class="article-meta">
+                            <span class="read-time">5 min read</span>
+                            <span class="publish-date">Nov 22, 2025</span>
+                        </div>
+                    </div>
+                </article>
+                
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="blog-actions">
+                <button class="load-more-btn" id="loadMoreBtn">Load More Articles</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Main JavaScript -->
+    <script src="./src/scripts/main-compiled.js"></script>
+</body>
+</html>
+
+<!-- 
+    Credits and Thanks:
+    Matrix - Particles.js
+    SliderJS - Ettrics
+    Fonts - Google Fonts
+-->

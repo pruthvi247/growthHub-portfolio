@@ -292,6 +292,19 @@ class ServicesCarousel {
 // Initialize Services Carousel
 $(document).ready(function() {
   new ServicesCarousel();
+  
+  // Initialize blog system only if we're on the blogs page
+  if (window.location.pathname.includes('blogs.html') || $('#blogGrid').length > 0) {
+    const blogSystem = new BlogSystem();
+    
+    // Handle URL fragment navigation for blog topics
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      setTimeout(() => {
+        blogSystem.highlightTopicArticle(hash);
+      }, 500);
+    }
+  }
 });
 
 // Blog System Functionality
@@ -299,13 +312,11 @@ class BlogSystem {
   constructor() {
     this.blogGrid = $('#blogGrid');
     this.filterBtns = $('.filter-btn');
-    this.searchInput = $('#blogSearch');
     this.loadMoreBtn = $('#loadMoreBtn');
     this.allArticles = $('.blog-card');
     this.articlesPerPage = 6;
     this.currentlyShown = 6;
     this.currentFilter = 'all';
-    this.searchTerm = '';
     
     this.init();
   }
@@ -316,12 +327,6 @@ class BlogSystem {
       const category = $(e.target).data('category');
       this.filterArticles(category);
       this.updateActiveFilter($(e.target));
-    });
-    
-    // Search functionality
-    this.searchInput.on('input', (e) => {
-      this.searchTerm = e.target.value.toLowerCase();
-      this.filterArticles(this.currentFilter);
     });
     
     // Load more functionality
@@ -344,16 +349,11 @@ class BlogSystem {
     let visibleArticles = this.allArticles.filter((index, article) => {
       const $article = $(article);
       const articleCategory = $article.data('category');
-      const articleTopic = $article.data('topic');
-      const articleText = $article.text().toLowerCase();
       
       // Category filter
       const categoryMatch = category === 'all' || articleCategory === category;
       
-      // Search filter
-      const searchMatch = this.searchTerm === '' || articleText.includes(this.searchTerm);
-      
-      return categoryMatch && searchMatch;
+      return categoryMatch;
     });
     
     // Hide all articles first
@@ -433,30 +433,345 @@ class BlogSystem {
   }
 }
 
-// Article Reading Functionality
+// Article Reading Functionality (for blogs page)
 $(document).ready(function() {
-  // Initialize blog system
-  new BlogSystem();
-  
-  // Article click handlers
-  $('.blog-card, .featured-article').on('click', function() {
-    const topic = $(this).data('topic');
-    openArticleModal(topic);
-  });
-  
-  $('.read-article-btn').on('click', function(e) {
-    e.stopPropagation();
-    const topic = $(this).closest('.featured-article').data('topic');
-    openArticleModal(topic);
-  });
+  // Article click handlers (only on blogs page)
+  if (window.location.pathname.includes('blogs.html') || $('#blogGrid').length > 0) {
+    $('.blog-card, .featured-article').on('click', function() {
+      const topic = $(this).data('topic');
+      openArticleModal(topic);
+    });
+    
+    $('.read-article-btn').on('click', function(e) {
+      e.stopPropagation();
+      const topic = $(this).closest('.featured-article').data('topic');
+      openArticleModal(topic);
+    });
+  }
 });
 
-// Article Modal System (for future implementation)
+// Full-Page Article Overlay System
 function openArticleModal(topic) {
-  // This would open a modal or navigate to a detailed article view
-  console.log(`Opening article for topic: ${topic}`);
+  console.log(`Opening full article for topic: ${topic}`);
   
-  // For now, we'll just show an alert
-  // In a real implementation, this would open a detailed view
-  alert(`Opening detailed article about: ${topic.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}`);
+  // Show loading state first
+  showArticleLoadingOverlay();
+  
+  // Load article content
+  loadArticleContent(topic).then(article => {
+    if (article) {
+      showFullArticleOverlay(article);
+    } else {
+      showArticleNotFoundOverlay(topic);
+    }
+  }).catch(error => {
+    console.error('Error loading article:', error);
+    showArticleErrorOverlay(topic);
+  });
+}
+
+function showArticleLoadingOverlay() {
+  const loadingOverlay = $(`
+    <div class="full-article-overlay loading">
+      <div class="article-loading">
+        <div class="loading-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+        <h3>Loading Article...</h3>
+        <p>Please wait while we fetch the content</p>
+      </div>
+    </div>
+  `);
+  
+  $('body').append(loadingOverlay);
+  setTimeout(() => loadingOverlay.addClass('active'), 10);
+}
+
+function loadArticleContent(topic) {
+  return new Promise((resolve, reject) => {
+    // Simulate loading time for better UX
+    setTimeout(() => {
+      fetch(`./articles/${topic}.json`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Article not found: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(article => resolve(article))
+        .catch(error => {
+          console.error('Failed to load article:', error);
+          resolve(null);
+        });
+    }, 800); // Simulate loading time
+  });
+}
+
+function showFullArticleOverlay(article) {
+  // Remove loading overlay
+  $('.full-article-overlay.loading').remove();
+  
+  // Create full article overlay
+  const articleOverlay = $(`
+    <div class="full-article-overlay">
+      <!-- Floating Close Button -->
+      <button class="floating-close-btn" aria-label="Close article" title="Close Article">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      
+      <div class="article-container">
+        <!-- Article Header -->
+        <header class="article-header">
+          <div class="article-nav">
+            <button class="article-back">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+              Back to Articles
+            </button>
+          </div>
+          <div class="article-close-buttons">
+            <button class="article-minimize" aria-label="Minimize article" title="Minimize">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 19h12v2H6z"/>
+              </svg>
+            </button>
+            <button class="article-close" aria-label="Close article" title="Close Article">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </header>
+        
+        <!-- Article Content -->
+        <article class="article-content">
+          <div class="article-meta-header">
+            <span class="article-category">${article.category}</span>
+            <div class="article-info">
+              <span class="article-date">${article.publishDate}</span>
+              <span class="article-read-time">${article.readTime}</span>
+            </div>
+          </div>
+          
+          <h1 class="article-title">${article.title}</h1>
+          <p class="article-subtitle">${article.subtitle}</p>
+          
+          <div class="article-author-info">
+            <div class="author-details">
+              <span class="author-name">By ${article.author}</span>
+            </div>
+          </div>
+          
+          <div class="article-tags">
+            ${article.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+          </div>
+          
+          <div class="article-body">
+            ${renderArticleContent(article.content)}
+          </div>
+          
+          <div class="article-footer">
+            <div class="article-sharing">
+              <h4>Share this article</h4>
+              <div class="share-buttons">
+                <button class="share-btn twitter">Twitter</button>
+                <button class="share-btn facebook">Facebook</button>
+                <button class="share-btn linkedin">LinkedIn</button>
+                <button class="share-btn copy-link">Copy Link</button>
+              </div>
+            </div>
+            
+            ${article.relatedArticles ? `
+              <div class="related-articles">
+                <h4>Related Articles</h4>
+                <div class="related-grid">
+                  ${article.relatedArticles.map(id => `
+                    <div class="related-card" data-article="${id}">
+                      <h5>${id.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h5>
+                      <p>Click to read more</p>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </article>
+      </div>
+    </div>
+  `);
+  
+  $('body').append(articleOverlay);
+  
+  // Animate in
+  setTimeout(() => articleOverlay.addClass('active'), 10);
+  
+  // Add event handlers
+  setupArticleOverlayEvents(articleOverlay);
+}
+
+function renderArticleContent(content) {
+  return content.map(section => {
+    switch(section.type) {
+      case 'intro':
+      case 'paragraph':
+        return `<p class="article-paragraph">${section.text}</p>`;
+      
+      case 'heading':
+        return `<h2 class="article-heading">${section.text}</h2>`;
+      
+      case 'subheading':
+        return `<h3 class="article-subheading">${section.text}</h3>`;
+      
+      case 'quote':
+        return `<blockquote class="article-quote">
+          <p>"${section.text}"</p>
+          ${section.author ? `<cite>— ${section.author}</cite>` : ''}
+        </blockquote>`;
+      
+      case 'list':
+        return `<ul class="article-list">
+          ${section.items.map(item => `<li>${item}</li>`).join('')}
+        </ul>`;
+      
+      case 'callout':
+        return `<div class="article-callout">
+          <p>${section.text}</p>
+        </div>`;
+      
+      case 'conclusion':
+        return `<div class="article-conclusion">
+          <p>${section.text}</p>
+        </div>`;
+      
+      default:
+        return `<p class="article-paragraph">${section.text}</p>`;
+    }
+  }).join('');
+}
+
+function setupArticleOverlayEvents(overlay) {
+  // Close handlers
+  overlay.find('.article-close, .article-back, .floating-close-btn').on('click', function() {
+    closeFullArticleOverlay(overlay);
+  });
+  
+  // Minimize handler
+  overlay.find('.article-minimize').on('click', function() {
+    overlay.toggleClass('minimized');
+  });
+  
+  // ESC key to close
+  $(document).on('keydown.articleOverlay', function(e) {
+    if (e.key === 'Escape') {
+      closeFullArticleOverlay(overlay);
+    }
+  });
+  
+  // Related articles
+  overlay.find('.related-card').on('click', function() {
+    const articleId = $(this).data('article');
+    closeFullArticleOverlay(overlay);
+    setTimeout(() => openArticleModal(articleId), 300);
+  });
+  
+  // Share buttons
+  overlay.find('.share-btn').on('click', function() {
+    const platform = $(this).hasClass('twitter') ? 'twitter' :
+                    $(this).hasClass('facebook') ? 'facebook' :
+                    $(this).hasClass('linkedin') ? 'linkedin' : 'copy';
+    handleArticleShare(platform, overlay);
+  });
+  
+  // Prevent body scroll
+  $('body').addClass('no-scroll');
+}
+
+function handleArticleShare(platform, overlay) {
+  const title = overlay.find('.article-title').text();
+  const url = window.location.href;
+  
+  switch(platform) {
+    case 'twitter':
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`);
+      break;
+    case 'facebook':
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+      break;
+    case 'linkedin':
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`);
+      break;
+    case 'copy':
+      navigator.clipboard.writeText(url).then(() => {
+        // Show feedback
+        const btn = overlay.find('.copy-link');
+        const originalText = btn.text();
+        btn.text('Copied!');
+        setTimeout(() => btn.text(originalText), 2000);
+      });
+      break;
+  }
+}
+
+function showArticleNotFoundOverlay(topic) {
+  $('.full-article-overlay.loading').remove();
+  
+  const notFoundOverlay = $(`
+    <div class="full-article-overlay error">
+      <div class="article-error">
+        <h3>Article Not Found</h3>
+        <p>The article "${topic.replace('-', ' ')}" could not be found.</p>
+        <button class="btn-primary error-close">Go Back</button>
+      </div>
+    </div>
+  `);
+  
+  $('body').append(notFoundOverlay);
+  setTimeout(() => notFoundOverlay.addClass('active'), 10);
+  
+  notFoundOverlay.find('.error-close').on('click', function() {
+    closeFullArticleOverlay(notFoundOverlay);
+  });
+}
+
+function showArticleErrorOverlay(topic) {
+  $('.full-article-overlay.loading').remove();
+  
+  const errorOverlay = $(`
+    <div class="full-article-overlay error">
+      <div class="article-error">
+        <h3>Loading Error</h3>
+        <p>There was an error loading the article. Please try again.</p>
+        <div class="error-actions">
+          <button class="btn-secondary error-close">Cancel</button>
+          <button class="btn-primary error-retry" data-topic="${topic}">Retry</button>
+        </div>
+      </div>
+    </div>
+  `);
+  
+  $('body').append(errorOverlay);
+  setTimeout(() => errorOverlay.addClass('active'), 10);
+  
+  errorOverlay.find('.error-close').on('click', function() {
+    closeFullArticleOverlay(errorOverlay);
+  });
+  
+  errorOverlay.find('.error-retry').on('click', function() {
+    const topic = $(this).data('topic');
+    closeFullArticleOverlay(errorOverlay);
+    setTimeout(() => openArticleModal(topic), 300);
+  });
+}
+
+function closeFullArticleOverlay(overlay) {
+  overlay.removeClass('active');
+  $('body').removeClass('no-scroll');
+  $(document).off('keydown.articleOverlay');
+  
+  setTimeout(() => {
+    overlay.remove();
+  }, 300);
 }
