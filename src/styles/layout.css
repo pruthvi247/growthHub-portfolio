@@ -8,10 +8,11 @@
   position: relative;
   background-color: #1e1f26; /* Dark background for hero section */
   text-align: center;
-  padding: 8rem 1rem 2rem; /* Top padding for fixed nav */
+  padding: 2rem 1rem; /* Reduced padding since we handle nav offset differently */
   width: 100%;
   z-index: 1;
   overflow: hidden; /* Contain particles within hero */
+  scroll-margin-top: 70px; /* Ensures proper scroll positioning for navigation */
 }
 
 /* Hero particles canvas - confined to hero section only */
@@ -39,18 +40,43 @@
 .content-section {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 70px);
   position: relative;
   background-color: #1e1f26; /* Dark background for content sections */
   text-align: center;
-  padding: 4rem 1rem;
+  padding: 2rem 1rem 3rem; /* Added bottom padding for content overflow */
+  scroll-margin-top: 70px; /* Ensures proper scroll positioning for navigation */
 }
 
 /* Alternate background colors for visual separation */
 .content-section:nth-child(even) {
   background-color: #252631; /* Slightly lighter for alternating sections */
+}
+
+/* Specific adjustment for content-heavy sections */
+#tab-mission {
+  justify-content: flex-start;
+  min-height: auto; /* Allow natural height for content-heavy section */
+  padding-top: 1rem;
+  padding-bottom: 4rem;
+}
+
+/* Mobile responsive adjustments for section heights */
+@media (max-width: 480px) {
+  .hero,
+  .content-section {
+    min-height: calc(100vh - 60px);
+    scroll-margin-top: 60px;
+    padding: 1.5rem 1rem 2.5rem;
+    justify-content: flex-start;
+  }
+  
+  #tab-mission {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+  }
 }
 
 /* Typography for Hero and Content Sections */
@@ -114,7 +140,7 @@ h3.span {
   position: relative;
   max-width: 1200px;
   width: 100%;
-  margin: 3rem auto 0;
+  /* margin: 3rem auto 0; */
 }
 
 /* Carousel Navigation Dots */
@@ -122,7 +148,7 @@ h3.span {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .nav-dot {
