@@ -664,18 +664,8 @@ function showFullArticleOverlay(article) {
             ${renderArticleContent(article.content)}
           </div>
           
-          <div class="article-footer">
-            <div class="article-sharing">
-              <h4>Share this article</h4>
-              <div class="share-buttons">
-                <button class="share-btn twitter">Twitter</button>
-                <button class="share-btn facebook">Facebook</button>
-                <button class="share-btn linkedin">LinkedIn</button>
-                <button class="share-btn copy-link">Copy Link</button>
-              </div>
-            </div>
-            
-            ${article.relatedArticles ? `
+          ${article.relatedArticles ? `
+            <div class="article-footer">
               <div class="related-articles">
                 <h4>Related Articles</h4>
                 <div class="related-grid">
@@ -687,8 +677,8 @@ function showFullArticleOverlay(article) {
                   `).join('')}
                 </div>
               </div>
-            ` : ''}
-          </div>
+            </div>
+          ` : ''}
         </article>
       </div>
     </div>
@@ -768,42 +758,8 @@ function setupArticleOverlayEvents(overlay) {
     setTimeout(() => openArticleModal(articleId), 300);
   });
   
-  // Share buttons
-  overlay.find('.share-btn').on('click', function() {
-    const platform = $(this).hasClass('twitter') ? 'twitter' :
-                    $(this).hasClass('facebook') ? 'facebook' :
-                    $(this).hasClass('linkedin') ? 'linkedin' : 'copy';
-    handleArticleShare(platform, overlay);
-  });
-  
   // Prevent body scroll
   $('body').addClass('no-scroll');
-}
-
-function handleArticleShare(platform, overlay) {
-  const title = overlay.find('.article-title').text();
-  const url = window.location.href;
-  
-  switch(platform) {
-    case 'twitter':
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`);
-      break;
-    case 'facebook':
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
-      break;
-    case 'linkedin':
-      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`);
-      break;
-    case 'copy':
-      navigator.clipboard.writeText(url).then(() => {
-        // Show feedback
-        const btn = overlay.find('.copy-link');
-        const originalText = btn.text();
-        btn.text('Copied!');
-        setTimeout(() => btn.text(originalText), 2000);
-      });
-      break;
-  }
 }
 
 function showArticleNotFoundOverlay(topic) {
