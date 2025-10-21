@@ -16,7 +16,7 @@ body {
   line-height: 1.6;
   overflow-x: hidden; /* Prevent horizontal scroll */
   min-height: 100vh;
-  background-color: #1e1f26; /* Dark background for particles */
+  background-color: var(--background-color); /* Dark background for particles */
 }
 
 a {

@@ -26,7 +26,7 @@ class ParticleBackground {
         color: ["#03dac6", "#ff0266", "#000000"],
         connectParticles: true,
         // Slower movement speed
-        speed: 0.1, // Reduced from default (~0.5) to make particles move slower
+        speed: 0.6, // Reduced from default (~0.5) to make particles move slower
         responsive: [
           {
             breakpoint: 768,
@@ -34,7 +34,7 @@ class ParticleBackground {
               color: ["#faebd7", "#03dac6", "#ff0266"],
               maxParticles: 43,
               connectParticles: false,
-              speed: 0.025 // Even slower on mobile for better performance
+              speed: 0.055 // Even slower on mobile for better performance
             }
           }
         ]
