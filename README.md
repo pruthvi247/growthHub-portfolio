@@ -169,4 +169,9 @@ For support, email support@growthhub.com or create an issue in the repository.
 
 ---
 
-**Made with ❤️ by the GrowthHub Team**
+### Deployment steps
+
+cd /<relative-path>/growthhub/growthHub-protfolio
+zip -r growthhub-portfolio.zip . -x "_.git_" "_.DS_Store_"
+
+**Made with ❤️ by the Hoop Team**

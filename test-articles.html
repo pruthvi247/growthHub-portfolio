@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Loading Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .loading { background-color: #fff3cd; border-color: #ffeaa7; }
+        button { margin: 5px; padding: 10px 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Article Loading Test for Netlify</h1>
+    
+    <div id="results"></div>
+    
+    <button onclick="testAllArticles()">Test All Article Loading Paths</button>
+    <button onclick="clearResults()">Clear Results</button>
+
+    <script>
+        const testPaths = [
+            './articles/strategic-planning.json',
+            'articles/strategic-planning.json',
+            '/articles/strategic-planning.json',
+            window.location.origin + '/articles/strategic-planning.json'
+        ];
+        
+        async function testPath(path) {
+            try {
+                console.log(`Testing path: ${path}`);
+                const response = await fetch(path);
+                console.log(`Response status: ${response.status}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return { success: true, path, data: data.title };
+                } else {
+                    return { success: false, path, error: `${response.status} ${response.statusText}` };
+                }
+            } catch (error) {
+                console.error(`Error with path ${path}:`, error);
+                return { success: false, path, error: error.message };
+            }
+        }
+        
+        async function testAllArticles() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="test-section loading">Testing article loading paths...</div>';
+            
+            const results = [];
+            
+            for (const path of testPaths) {
+                const result = await testPath(path);
+                results.push(result);
+                
+                const div = document.createElement('div');
+                div.className = `test-section ${result.success ? 'success' : 'error'}`;
+                div.innerHTML = `
+                    <h3>Path: ${result.path}</h3>
+                    <p><strong>Status:</strong> ${result.success ? 'SUCCESS' : 'FAILED'}</p>
+                    ${result.success 
+                        ? `<p><strong>Article Title:</strong> ${result.data}</p>`
+                        : `<p><strong>Error:</strong> ${result.error}</p>`
+                    }
+                `;
+                resultsDiv.appendChild(div);
+            }
+            
+            // Show summary
+            const successful = results.filter(r => r.success);
+            if (successful.length > 0) {
+                const summaryDiv = document.createElement('div');
+                summaryDiv.className = 'test-section success';
+                summaryDiv.innerHTML = `
+                    <h3>Summary</h3>
+                    <p><strong>Working paths:</strong> ${successful.length} of ${testPaths.length}</p>
+                    <p><strong>Recommended path:</strong> ${successful[0].path}</p>
+                `;
+                resultsDiv.appendChild(summaryDiv);
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Auto-test on page load
+        window.addEventListener('load', testAllArticles);
+    </script>
+</body>
+</html>

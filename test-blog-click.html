@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog Click Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Blog Click Test</h1>
+    
+    <div class="blog-card" data-topic="strategic-planning">
+        <h3>Test Blog Card</h3>
+        <p>Click this to test the blog functionality</p>
+    </div>
+    
+    <script src="./src/scripts/main-compiled.js"></script>
+    
+    <script>
+        console.log('=== TESTING BLOG FUNCTIONALITY ===');
+        
+        setTimeout(() => {
+            console.log('Running tests after 2 seconds...');
+            console.log('Blog cards found:', $('.blog-card').length);
+            console.log('openArticleModal available:', typeof window.openArticleModal);
+            console.log('setupBlogCardHandlers available:', typeof window.setupBlogCardHandlers);
+            
+            // Force setup of handlers
+            if (window.setupBlogCardHandlers) {
+                console.log('Manually calling setupBlogCardHandlers...');
+                window.setupBlogCardHandlers();
+            }
+            
+            // Test manual click
+            console.log('Testing manual click trigger...');
+            $('.blog-card').first().trigger('click');
+            
+            // Test openArticleModal directly
+            if (window.openArticleModal) {
+                console.log('Testing openArticleModal directly...');
+                setTimeout(() => {
+                    window.openArticleModal('strategic-planning');
+                }, 3000);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Netlify redirects file
+# Handle routing for blogs page
+/blogs /blogs.html 200
+
+# Handle articles directory with proper headers
+/articles/* /articles/:splat 200
+
+# Default fallback to index.html for hash routing
+/* /index.html 200

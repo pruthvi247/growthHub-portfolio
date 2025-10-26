@@ -72,7 +72,15 @@ class NavigationPage {
     
     // Check if this is a cross-page navigation (contains .html)
     if (href.includes('.html')) {
-      // Allow normal navigation for cross-page links
+      // For cross-page navigation, handle it properly
+      if (href.includes('#')) {
+        // This is a link to another page with a hash fragment
+        // Let the browser handle the navigation but ensure it works
+        window.location.href = href;
+        event.preventDefault();
+        return false;
+      }
+      // Allow normal navigation for cross-page links without hash
       return true;
     }
     
@@ -319,7 +327,7 @@ $(document).ready(function() {
   new ServicesCarousel();
   
   // Initialize blog system only if we're on the blogs page
-  if (window.location.pathname.includes('blogs.html') || $('#blogGrid').length > 0) {
+  if (window.location.pathname.includes('blogs') || $('#blogGrid').length > 0) {
     const blogSystem = new BlogSystem();
     
     // Handle URL fragment navigation for blog topics
@@ -461,11 +469,11 @@ class BlogSystem {
 // Featured Article Data (shared across pages)
 const FEATURED_ARTICLE_DATA = {
   topic: 'strategic-planning',
-  title: 'The Future of Ethical Political Campaigns in India',
-  description: 'Exploring how modern digital strategies can transform political communication while maintaining ethical standards and authentic community connections.',
+  title: 'Strategic Planning for Modern Campaigns',
+  description: 'Comprehensive guide to developing campaign strategies that resonate with diverse Indian communities while maintaining ethical standards and authentic community connections.',
   category: 'Strategy',
-  readTime: '8 min read',
-  publishDate: 'Dec 10, 2025'
+  readTime: '5 min read',
+  publishDate: 'Dec 8, 2025'
 };
 
 // Function to update featured article across all pages
@@ -525,18 +533,12 @@ function initializeFeaturedArticle() {
     const topic = $(this).closest('.featured-article').data('topic');
     openArticleModal(topic);
   });
-  
-  // Blog card handlers (only for blogs page)
-  if (window.location.pathname.includes('blogs.html') || $('#blogGrid').length > 0) {
-    $(document).off('click', '.blog-card').on('click', '.blog-card', function() {
-      const topic = $(this).data('topic');
-      openArticleModal(topic);
-    });
-  }
 }
 
 // Initialize Featured Articles on Page Load
 function initializePage() {
+  console.log('Initializing page...');
+  
   // Generate featured article for home page
   if ($('#home-featured-article').length > 0) {
     $('#home-featured-article').html(createFeaturedArticle());
@@ -551,28 +553,77 @@ function initializePage() {
   initializeFeaturedArticle();
 }
 
-// Article Reading Functionality
+
+
+// Simple Blog Card Click Handler
 $(document).ready(function() {
+  console.log('Document ready - initializing page functionality');
+  console.log('Current pathname:', window.location.pathname);
+  console.log('Blog grid element exists:', $('#blogGrid').length > 0);
+  
   // Initialize the page content and functionality
   initializePage();
+  
+  // Simple, direct blog card click handling
+  setTimeout(() => {
+    console.log('Setting up SIMPLE blog card handlers...');
+    
+    // Remove ALL existing click handlers first
+    $('.blog-card').off('click');
+    
+    // Add ONE simple handler
+    $('.blog-card').on('click', function(e) {
+      console.log('🎯 SIMPLE CLICK HANDLER ACTIVATED!');
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const topic = $(this).data('topic');
+      console.log('Topic clicked:', topic);
+      
+      if (topic && window.openArticleModal) {
+        console.log('Opening article modal for:', topic);
+        window.openArticleModal(topic);
+      } else {
+        console.error('Missing topic or openArticleModal function');
+        console.log('Available:', {
+          topic: topic,
+          openArticleModal: typeof window.openArticleModal
+        });
+      }
+    });
+    
+    console.log('Simple blog card handlers setup complete. Cards found:', $('.blog-card').length);
+  }, 200);
 });
 
 // Full-Page Article Overlay System
 function openArticleModal(topic) {
-  console.log(`Opening full article for topic: ${topic}`);
+  console.log(`=== OPENING ARTICLE: ${topic} ===`);
+  console.log('Current working directory context:', window.location.href);
+  
+  // Prevent multiple overlays from opening (but don't remove loading overlays)
+  const existingOverlays = $('.full-article-overlay:not(.loading)');
+  if (existingOverlays.length > 0) {
+    console.log('Removing existing overlays:', existingOverlays.length);
+    existingOverlays.remove();
+  }
   
   // Show loading state first
   showArticleLoadingOverlay();
   
-  // Load article content
+  // Load article content ONLY from articles/ folder JSON files
   loadArticleContent(topic).then(article => {
-    if (article) {
+    console.log('✅ Article loaded successfully from JSON file');
+    console.log('Article data:', article);
+    if (article && article.source === 'json') {
       showFullArticleOverlay(article);
     } else {
+      console.error('Article not loaded from JSON file as expected');
       showArticleNotFoundOverlay(topic);
     }
   }).catch(error => {
-    console.error('Error loading article:', error);
+    console.error('❌ Failed to load article from articles/ folder:', error);
+    console.error('Make sure the file exists: articles/' + topic + '.json');
     showArticleErrorOverlay(topic);
   });
 }
@@ -596,26 +647,342 @@ function showArticleLoadingOverlay() {
 
 function loadArticleContent(topic) {
   return new Promise((resolve, reject) => {
-    // Simulate loading time for better UX
-    setTimeout(() => {
-      fetch(`./articles/${topic}.json`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Article not found: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(article => resolve(article))
-        .catch(error => {
-          console.error('Failed to load article:', error);
-          resolve(null);
-        });
-    }, 800); // Simulate loading time
+    console.log(`Loading article: ${topic}`);
+    console.log(`Current location: ${window.location.href}`);
+    console.log(`Current pathname: ${window.location.pathname}`);
+    
+    // Try multiple path variations optimized for Netlify static site deployment
+    // ONLY load from articles/ folder - no embedded fallback
+    const possiblePaths = [
+      `./articles/${topic}.json`,        // Relative path with ./ (recommended for static sites)
+      `articles/${topic}.json`,          // Relative path without ./
+      `/articles/${topic}.json`,         // Absolute path from domain root (Netlify)
+      `${window.location.origin}/articles/${topic}.json`, // Full URL for Netlify CDN
+      `${window.location.pathname.replace(/[^/]*$/, '')}articles/${topic}.json` // Path relative to current page
+    ];
+    
+    console.log(`Will try these paths in order:`, possiblePaths);
+    
+    // Store topic in the function for fallback access
+    tryFetchArticle.topic = topic;
+    tryFetchArticle(possiblePaths, 0, resolve, reject);
   });
 }
 
+function tryFetchArticle(paths, index, resolve, reject) {
+  if (index >= paths.length) {
+    console.error('🚨 CRITICAL: Failed to load article from ALL attempted paths:', paths);
+    console.error('All articles should be available in the articles/ folder as JSON files');
+    console.error('Current protocol:', window.location.protocol);
+    console.error('Current host:', window.location.host);
+    
+    // Check if we're running on file:// protocol
+    if (window.location.protocol === 'file:') {
+      console.error('🔍 FILE PROTOCOL DETECTED: Articles cannot be loaded via fetch() from file:// URLs');
+      console.error('💡 LOCAL DEVELOPMENT: Serve via web server (python -m http.server 8000)');
+      console.error('📝 NETLIFY DEPLOYMENT: This should work automatically when deployed');
+      reject(new Error(`File protocol detected - use web server locally or deploy to Netlify`));
+    } else {
+      console.error('🌐 NETLIFY/WEB SERVER: All paths failed to load article');
+      console.error('📁 Verify articles/ folder exists and contains:', `${arguments.callee.topic}.json`);
+      reject(new Error(`Article not found: ${arguments.callee.topic}. Check Netlify deployment and file paths.`));
+    }
+    return;
+  }
+  
+  const currentPath = paths[index];
+  console.log(`[Attempt ${index + 1}/${paths.length}] Fetching from: ${currentPath}`);
+  
+  fetch(currentPath)
+    .then(response => {
+      console.log(`Response for ${currentPath}:`, {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        url: response.url,
+        type: response.type
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(article => {
+      console.log(`✅ SUCCESS: Article loaded from ${currentPath}`);
+      console.log('Article data:', article);
+      // Mark the source so we know it came from JSON file
+      article.source = 'json';
+      resolve(article);
+    })
+    .catch(error => {
+      console.warn(`❌ FAILED: ${currentPath} - ${error.message}`);
+      console.warn('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack?.substring(0, 200)
+      });
+      
+      // Add more specific error logging
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        console.error('🚫 Network/CORS error - file may not exist or is not accessible via fetch');
+        console.error('This often happens with file:// protocol or incorrect paths');
+      }
+      
+      // Try next path
+      tryFetchArticle(paths, index + 1, resolve, reject);
+    });
+}
+
+// Embedded Article Data - DISABLED (articles loaded from articles/ folder only)
+function getEmbeddedArticleData(topic) {
+  console.warn('getEmbeddedArticleData called - this should not happen as articles should load from JSON files');
+  return null; // Force using JSON files only
+  
+  /* DISABLED EMBEDDED DATA - using articles/ folder instead
+  const articles = {
+    'strategic-planning': {
+      "id": "strategic-planning",
+      "title": "Strategic Planning for Modern Political Campaigns",
+      "subtitle": "Comprehensive guide to developing campaign strategies that resonate with diverse Indian communities",
+      "category": "Strategy",
+      "author": "Dr. Rajesh Kumar",
+      "publishDate": "December 8, 2025",
+      "readTime": "12 min read",
+      "tags": ["Strategy", "Campaign Management", "Political Planning", "Community Engagement"],
+      "summary": "Learn how to develop comprehensive campaign strategies that connect with voters across India's diverse demographic landscape while maintaining ethical standards and authentic messaging.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Strategic political campaign planning in India requires deep understanding of diverse communities, cultural nuances, and ethical considerations that build trust while advancing democratic participation across the nation's complex social fabric."
+        },
+        {
+          "type": "heading",
+          "text": "Understanding India's Political Landscape"
+        },
+        {
+          "type": "paragraph",
+          "text": "India's democracy operates within a unique context of linguistic diversity, regional variations, and complex social dynamics that require sophisticated strategic approaches to campaign planning."
+        }
+      ],
+      "relatedArticles": ["content-creation", "community-events", "crisis-management"]
+    },
+    'content-creation': {
+      "id": "content-creation",
+      "title": "Content Creation for Political Impact",
+      "subtitle": "Best practices for creating authentic content that builds trust and drives meaningful engagement",
+      "category": "Media",
+      "author": "Anita Sharma",
+      "publishDate": "December 6, 2025",
+      "readTime": "7 min read",
+      "tags": ["Content Strategy", "Digital Media", "Political Communication", "Authentic Messaging"],
+      "summary": "Master the art of political content creation with strategies that prioritize authenticity, community engagement, and ethical communication practices.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Effective political content creation balances authentic storytelling with strategic messaging, ensuring that every piece of content serves both campaign objectives and community interests while maintaining the highest ethical standards."
+        },
+        {
+          "type": "heading",
+          "text": "Foundations of Authentic Political Content"
+        },
+        {
+          "type": "paragraph",
+          "text": "Authentic political content begins with genuine understanding of community needs, transparent communication, and consistent demonstration of values through both content and actions."
+        }
+      ],
+      "relatedArticles": ["strategic-planning", "social-media-content", "video-production"]
+    },
+    'crisis-management': {
+      "id": "crisis-management",
+      "title": "Crisis Management in Political Communications",
+      "subtitle": "Strategic approaches to handling controversies and maintaining public trust during challenging times",
+      "category": "Strategy", 
+      "author": "Vikram Patel",
+      "publishDate": "November 28, 2025",
+      "readTime": "9 min read",
+      "tags": ["Crisis Communication", "Public Relations", "Reputation Management", "Strategic Response"],
+      "summary": "Learn proven strategies for navigating political crises with transparency, accountability, and ethical leadership that strengthens rather than undermines public trust.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Political crises are inevitable in democratic discourse, but how leaders respond to these challenges can either strengthen or undermine public trust, making strategic crisis management an essential skill for ethical political leadership."
+        },
+        {
+          "type": "heading", 
+          "text": "Principles of Ethical Crisis Response"
+        },
+        {
+          "type": "paragraph",
+          "text": "Effective crisis management in politics prioritizes transparency, accountability, and genuine concern for community welfare over short-term damage control or political advantage."
+        }
+      ],
+      "relatedArticles": ["strategic-planning", "content-creation", "social-media-content"]
+    },
+    'performance-analytics': {
+      "id": "performance-analytics",
+      "title": "Performance Analytics in Political Campaigns",
+      "subtitle": "Leveraging data analytics to measure campaign effectiveness while maintaining ethical standards and privacy protection",
+      "category": "Technology",
+      "author": "Dr. Meera Singh",
+      "publishDate": "December 4, 2025",
+      "readTime": "6 min read",
+      "tags": ["Data Analytics", "Campaign Metrics", "Performance Tracking", "Digital Strategy"],
+      "summary": "Master ethical data analytics techniques to measure campaign effectiveness, understand voter engagement, and optimize outreach strategies while respecting privacy and democratic values.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Performance analytics in political campaigns can provide valuable insights into voter engagement and campaign effectiveness, but ethical implementation requires careful consideration of privacy, accuracy, and democratic values."
+        },
+        {
+          "type": "heading",
+          "text": "Ethical Framework for Campaign Analytics"
+        },
+        {
+          "type": "paragraph",
+          "text": "Successful campaign analytics balance data-driven insights with respect for individual privacy, ensuring that measurement enhances rather than manipulates democratic participation."
+        }
+      ],
+      "relatedArticles": ["voter-analysis", "strategic-planning", "content-creation"]
+    },
+    'door-to-door-campaigns': {
+      "id": "door-to-door-campaigns", 
+      "title": "Effective Door-to-Door Campaign Strategies",
+      "subtitle": "Building genuine connections through grassroots campaigning and authentic community engagement",
+      "category": "Outreach",
+      "author": "Rajesh Gupta",
+      "publishDate": "December 2, 2025",
+      "readTime": "4 min read",
+      "tags": ["Grassroots Campaigning", "Community Outreach", "Voter Contact", "Political Engagement"],
+      "summary": "Learn time-tested strategies for effective door-to-door campaigning that builds authentic relationships, gathers valuable community input, and strengthens democratic participation at the grassroots level.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Door-to-door campaigning remains one of the most powerful tools for political engagement, offering opportunities for authentic dialogue, community listening, and relationship building that digital platforms cannot replicate."
+        },
+        {
+          "type": "heading",
+          "text": "Preparing for Effective Door-to-Door Outreach"
+        },
+        {
+          "type": "paragraph",
+          "text": "Successful door-to-door campaigns require thorough preparation, genuine community interest, and respect for residents' time and perspectives, focusing on listening as much as sharing information."
+        }
+      ],
+      "relatedArticles": ["community-events", "strategic-planning", "voter-analysis"]
+    },
+    'video-production': {
+      "id": "video-production",
+      "title": "Political Video Production Best Practices",
+      "subtitle": "Creating compelling video content that tells authentic stories and connects with voters emotionally",
+      "category": "Media",
+      "author": "Arjun Mehta", 
+      "publishDate": "November 30, 2025",
+      "readTime": "8 min read",
+      "tags": ["Video Production", "Storytelling", "Visual Media", "Digital Content"],
+      "summary": "Master the art of political video production with techniques for authentic storytelling, technical excellence, and emotional connection that respects audience intelligence and community values.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Video content has become the dominant medium for political communication, offering unparalleled opportunities to tell authentic stories, demonstrate leadership qualities, and connect emotionally with diverse audiences."
+        },
+        {
+          "type": "heading",
+          "text": "Planning Your Political Video Content"
+        },
+        {
+          "type": "paragraph",
+          "text": "Successful political videos start with clear objectives, authentic stories, and deep understanding of audience needs and preferences."
+        }
+      ],
+      "relatedArticles": ["content-creation", "social-media-content", "strategic-planning"]
+    },
+    'social-media-content': {
+      "id": "social-media-content",
+      "title": "Authentic Social Media Content for Political Engagement", 
+      "subtitle": "Building genuine online communities through transparent communication and meaningful digital interactions",
+      "category": "Media",
+      "author": "Priya Sharma",
+      "publishDate": "December 2, 2025",
+      "readTime": "6 min read",
+      "tags": ["Social Media", "Digital Engagement", "Content Strategy", "Community Building"],
+      "summary": "Learn to create authentic social media content that builds trust, facilitates meaningful dialogue, and strengthens democratic engagement through transparent and respectful online communication.",
+      "content": [
+        {
+          "type": "intro", 
+          "text": "Social media offers unprecedented opportunities for democratic participation and community dialogue, but its effectiveness depends on authentic engagement that respects audience intelligence and promotes genuine conversation."
+        },
+        {
+          "type": "heading",
+          "text": "Foundations of Authentic Social Media Engagement"
+        },
+        {
+          "type": "paragraph",
+          "text": "Successful political social media presence is built on transparency, consistency, and genuine commitment to community dialogue and service."
+        }
+      ],
+      "relatedArticles": ["content-creation", "video-production", "crisis-management"]
+    },
+    'voter-analysis': {
+      "id": "voter-analysis",
+      "title": "Ethical Voter Behavior Analysis and Data Privacy",
+      "subtitle": "Understanding community needs through responsible data analysis while protecting individual privacy and democratic integrity",
+      "category": "Technology",
+      "author": "Dr. Sarah Chen",
+      "publishDate": "December 5, 2025", 
+      "readTime": "7 min read",
+      "tags": ["Data Analytics", "Voter Privacy", "Ethics", "Campaign Technology"],
+      "summary": "Learn how to conduct ethical voter analysis that respects privacy, promotes democratic participation, and uses data responsibly to better understand and serve community needs.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Data analytics can provide valuable insights into community needs and voting patterns, but ethical political campaigns must balance analytical effectiveness with strict privacy protection and democratic values."
+        },
+        {
+          "type": "heading",
+          "text": "Ethical Foundations of Voter Data Analysis"
+        },
+        {
+          "type": "paragraph",
+          "text": "Responsible voter analysis begins with clear ethical principles that prioritize individual privacy, democratic participation, and community service over tactical advantage."
+        }
+      ],
+      "relatedArticles": ["performance-analytics", "strategic-planning", "crisis-management"]
+    },
+    'community-events': {
+      "id": "community-events",
+      "title": "Organizing Impactful Community Events and Public Engagement",
+      "subtitle": "Creating inclusive, accessible events that strengthen democratic participation and build lasting community connections", 
+      "category": "Outreach",
+      "author": "Maria Rodriguez",
+      "publishDate": "December 8, 2025",
+      "readTime": "5 min read", 
+      "tags": ["Community Organizing", "Public Events", "Civic Engagement", "Accessibility"],
+      "summary": "Master the art of organizing community events that bring people together, facilitate meaningful dialogue, and strengthen democratic participation through inclusive, accessible, and well-planned public gatherings.",
+      "content": [
+        {
+          "type": "intro",
+          "text": "Well-organized community events serve as the cornerstone of democratic engagement, creating spaces where diverse voices can be heard, relationships can be built, and collective action can emerge from genuine dialogue."
+        },
+        {
+          "type": "heading",
+          "text": "Planning Inclusive and Accessible Events"
+        },
+        {
+          "type": "paragraph",
+          "text": "Successful community events begin with careful planning that prioritizes accessibility, inclusion, and meaningful participation for all community members regardless of background or circumstances."
+        }
+      ],
+      "relatedArticles": ["door-to-door-campaigns", "strategic-planning", "crisis-management"]
+    }
+  }; 
+  END DISABLED EMBEDDED DATA */
+  
+  return null; // Always return null to force JSON loading
+}
+
 function showFullArticleOverlay(article) {
-  // Remove loading overlay
+  // Remove loading overlay specifically
   $('.full-article-overlay.loading').remove();
   
   // Create full article overlay
@@ -750,13 +1117,17 @@ function renderArticleContent(content) {
 }
 
 function setupArticleOverlayEvents(overlay) {
-  // Close handlers
-  overlay.find('.article-close, .article-back, .floating-close-btn').on('click', function() {
+  // Close handlers with proper event prevention
+  overlay.find('.article-close, .article-back, .floating-close-btn').off('click').on('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     closeFullArticleOverlay(overlay);
   });
   
-  // Minimize handler
-  overlay.find('.article-minimize').on('click', function() {
+  // Minimize handler with proper event prevention
+  overlay.find('.article-minimize').off('click').on('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     overlay.toggleClass('minimized');
   });
   
@@ -802,14 +1173,25 @@ function showArticleNotFoundOverlay(topic) {
 function showArticleErrorOverlay(topic) {
   $('.full-article-overlay.loading').remove();
   
+  // Determine if this is a file protocol issue
+  const isFileProtocol = window.location.protocol === 'file:';
+  const errorTitle = isFileProtocol ? 'File Protocol Issue' : 'Loading Error';
+  const errorMessage = isFileProtocol 
+    ? `Cannot load articles from file:// URLs. Please serve the site via a web server:<br><br><code>python3 -m http.server 8000</code><br><br>Then visit: <code>http://localhost:8000/blogs.html</code>`
+    : `Could not load article "${topic}". Check that the file exists at: <code>articles/${topic}.json</code>`;
+  
   const errorOverlay = $(`
     <div class="full-article-overlay error">
       <div class="article-error">
-        <h3>Loading Error</h3>
-        <p>There was an error loading the article. Please try again.</p>
+        <h3>${errorTitle}</h3>
+        <p>${errorMessage}</p>
+        <div class="error-details">
+          <p><strong>Current URL:</strong> ${window.location.href}</p>
+          <p><strong>Looking for:</strong> articles/${topic}.json</p>
+        </div>
         <div class="error-actions">
           <button class="btn-secondary error-close">Cancel</button>
-          <button class="btn-primary error-retry" data-topic="${topic}">Retry</button>
+          ${!isFileProtocol ? `<button class="btn-primary error-retry" data-topic="${topic}">Retry</button>` : ''}
         </div>
       </div>
     </div>
@@ -830,11 +1212,25 @@ function showArticleErrorOverlay(topic) {
 }
 
 function closeFullArticleOverlay(overlay) {
+  // Prevent multiple calls by checking if already closing
+  if (overlay.hasClass('closing')) {
+    return;
+  }
+  
+  overlay.addClass('closing');
   overlay.removeClass('active');
   $('body').removeClass('no-scroll');
   $(document).off('keydown.articleOverlay');
+  
+  // Remove all event handlers from the overlay to prevent conflicts
+  overlay.find('*').off();
+  overlay.off();
   
   setTimeout(() => {
     overlay.remove();
   }, 300);
 }
+
+// Make functions globally accessible for debugging and fallback
+window.openArticleModal = openArticleModal;
+console.log('Global functions assigned - openArticleModal:', typeof window.openArticleModal);

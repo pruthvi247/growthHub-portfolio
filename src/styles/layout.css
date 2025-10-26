@@ -2774,36 +2774,73 @@ h3.span {
 
 /* Company Info Section */
 .footer-section.company-info {
-  max-width: 350px;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .footer-logo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.footer-logo:hover {
+  transform: translateY(-2px);
 }
 
 .footer-logo-icon {
-  width: 32px;
-  height: 32px;
-  filter: brightness(1.2);
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  filter: 
+    brightness(1.2)
+    drop-shadow(0 0 15px var(--active-primary))
+    drop-shadow(0 0 30px rgba(3, 218, 198, 0.2));
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+}
+
+.footer-logo:hover .footer-logo-icon {
+  filter: 
+    brightness(1.3)
+    drop-shadow(0 0 20px var(--primary-color))
+    drop-shadow(0 0 40px rgba(255, 2, 102, 0.3))
+    drop-shadow(0 0 60px rgba(3, 218, 198, 0.3));
+  transform: rotate(3deg) scale(1.05);
 }
 
 .footer-logo-text {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--primary-color);
   background: linear-gradient(45deg, var(--primary-color), var(--pure-white));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  transition: all 0.3s ease;
+}
+
+.footer-logo:hover .footer-logo-text {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px var(--active-primary);
+  transform: scale(1.02);
 }
 
 .footer-description {
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.7;
   color: var(--text-light-gray);
+  margin-left: 0;
+  max-width: 100%;
+  text-align: left;
   margin-bottom: 2rem;
 }
 
@@ -3033,6 +3070,26 @@ h3.span {
   
   .footer-section.company-info {
     max-width: none;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .footer-logo {
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-logo-icon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .footer-logo-text {
+    font-size: 1.6rem;
+  }
+  
+  .footer-description {
+    text-align: center;
   }
   
   .footer-bottom-content {
@@ -3043,6 +3100,27 @@ h3.span {
   
   .footer-bottom-links {
     gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-logo {
+    gap: 0.8rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .footer-logo-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .footer-logo-text {
+    font-size: 1.4rem;
+  }
+  
+  .footer-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
 }
 

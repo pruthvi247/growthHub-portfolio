@@ -32,12 +32,12 @@
             
             <!-- Navigation Links -->
             <nav class="nav-links">
-                <a class="nav-tab" href="index.html#home">Home</a>
-                <a class="nav-tab" href="index.html#tab-services">Services</a>
-                <a class="nav-tab" href="index.html#tab-mission">Mission</a>
-                <a class="nav-tab" href="index.html#tab-about">About</a>
-                <a class="nav-tab active" href="blogs.html">Blogs</a>
-                <a class="nav-tab" href="#contact">Contact</a>
+                <a class="nav-tab" href="./index.html#home">Home</a>
+                <a class="nav-tab" href="./index.html#tab-services">Services</a>
+                <a class="nav-tab" href="./index.html#tab-mission">Mission</a>
+                <a class="nav-tab" href="./index.html#tab-about">About</a>
+                <a class="nav-tab active" href="./blogs.html">Blogs</a>
+                <a class="nav-tab" href="./index.html#contact">Contact</a>
                 <span class="nav-tab-slider"></span>
             </nav>
             
@@ -322,12 +322,12 @@
                 <div class="footer-section quick-links">
                     <h3 class="footer-heading">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html#home">Home</a></li>
-                        <li><a href="index.html#tab-services">Our Services</a></li>
-                        <li><a href="index.html#tab-mission">Mission</a></li>
-                        <li><a href="index.html#tab-about">About Us</a></li>
-                        <li><a href="blogs.html">Blog</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="./index.html#home">Home</a></li>
+                        <li><a href="./index.html#tab-services">Our Services</a></li>
+                        <li><a href="./index.html#tab-mission">Mission</a></li>
+                        <li><a href="./index.html#tab-about">About Us</a></li>
+                        <li><a href="./blogs.html">Blog</a></li>
+                        <li><a href="./index.html#contact">Contact</a></li>
                     </ul>
                 </div>
 
@@ -335,12 +335,12 @@
                 <div class="footer-section services-links">
                     <h3 class="footer-heading">Services</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html#tab-services">Campaign Management</a></li>
-                        <li><a href="index.html#tab-services">Community Outreach</a></li>
-                        <li><a href="index.html#tab-services">Content Creation</a></li>
-                        <li><a href="index.html#tab-services">Public Relations</a></li>
-                        <li><a href="index.html#tab-services">Data Analytics</a></li>
-                        <li><a href="index.html#tab-services">Digital Platforms</a></li>
+                        <li><a href="./index.html#tab-services">Campaign Management</a></li>
+                        <li><a href="./index.html#tab-services">Community Outreach</a></li>
+                        <li><a href="./index.html#tab-services">Content Creation</a></li>
+                        <li><a href="./index.html#tab-services">Public Relations</a></li>
+                        <li><a href="./index.html#tab-services">Data Analytics</a></li>
+                        <li><a href="./index.html#tab-services">Digital Platforms</a></li>
                     </ul>
                 </div>
 
@@ -418,7 +418,68 @@
     </footer>
 
     <!-- Main JavaScript -->
+        <!-- Main JavaScript -->
     <script src="./src/scripts/main-compiled.js"></script>
+    
+    <!-- Article loading test script -->
+    <script>
+    $(document).ready(function() {
+        console.log('=== BLOGS PAGE - JSON ONLY LOADING TEST ===');
+        console.log('- Blog cards found:', $('.blog-card').length);
+        console.log('- openArticleModal available:', typeof window.openArticleModal);
+        
+        // Test that JSON files are accessible
+        console.log('🔍 Testing JSON file accessibility...');
+        console.log('Current URL:', window.location.href);
+        console.log('Protocol:', window.location.protocol);
+        
+        if (window.location.protocol === 'file:') {
+            console.warn('⚠️ FILE PROTOCOL DETECTED');
+            console.warn('Articles cannot be loaded from file:// URLs');
+            console.warn('💡 Local Dev: python3 -m http.server 8000');
+            console.warn('📤 Deployment: Upload to Netlify for production');
+        } else {
+            console.log('🌐 Web server detected - testing article loading...');
+            fetch('./articles/strategic-planning.json')
+                .then(response => {
+                    console.log('✅ Article accessible:', response.ok, response.status);
+                    console.log('📍 Response URL:', response.url);
+                    console.log('🏢 Server:', window.location.host.includes('netlify') ? 'Netlify' : 'Local/Other');
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                })
+                .then(data => {
+                    console.log('✅ Article loaded successfully:', data.title);
+                    console.log('📊 Ready for Netlify deployment!');
+                })
+                .catch(error => {
+                    console.error('❌ Article loading failed:', error);
+                    console.error('🔍 Check articles/ folder in deployment');
+                });
+        }
+        
+        // Manual click handler for testing
+        $('.blog-card').off('click.test').on('click.test', function() {
+            console.log('🎯 BLOG CARD CLICKED - LOADING FROM JSON ONLY');
+            const topic = $(this).data('topic');
+            console.log('Topic:', topic);
+            
+            if (window.openArticleModal && topic) {
+                window.openArticleModal(topic);
+            } else {
+                console.error('Missing openArticleModal or topic');
+            }
+        });
+        
+        console.log('JSON-only loading system ready');
+    });
+    </script>
+</body>
+</html>
+    
+
 </body>
 </html>
 

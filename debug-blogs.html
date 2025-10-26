@@ -1,0 +1,28 @@
+<!-- Debug script for blogs page - remove after testing -->
+<script>
+$(document).ready(function() {
+    console.log('=== BLOGS PAGE DEBUG INFO ===');
+    console.log('Current URL:', window.location.href);
+    console.log('Pathname:', window.location.pathname);
+    console.log('Blog grid exists:', $('#blogGrid').length > 0);
+    console.log('Number of blog cards:', $('.blog-card').length);
+    console.log('Blog cards with topics:', $('.blog-card[data-topic]').length);
+    
+    // Test click handler
+    $('.blog-card').each(function(index) {
+        const topic = $(this).data('topic');
+        console.log(`Blog card ${index + 1}: topic = ${topic}`);
+    });
+    
+    // Add visual debugging
+    $('.blog-card').hover(
+        function() { 
+            $(this).css('border', '2px solid red');
+            console.log('Hover on card:', $(this).data('topic'));
+        },
+        function() { 
+            $(this).css('border', '');
+        }
+    );
+});
+</script>
